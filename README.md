@@ -8,6 +8,8 @@ Scenario-as-Code test runner for Nav2. Run repeatable navigation regression test
 nav2_scenario_runner run examples/turtlebot3_gazebo/smoke.yaml
 ```
 
+The README demo GIF should be captured from a real Nav2/Gazebo/Foxglove run, not a toy animation. See [docs/demo-capture.md](docs/demo-capture.md) for the Playwright recorder workflow.
+
 Current scaffold usage from a source checkout:
 
 ```bash
