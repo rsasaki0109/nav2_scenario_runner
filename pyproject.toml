@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nav2-scenario-runner"
+version = "0.1.0"
+description = "Scenario-as-Code test runner for Nav2"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+  {name = "nav2_scenario_runner maintainers"}
+]
+keywords = ["ros2", "nav2", "robotics", "testing", "scenario", "ci"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Software Development :: Testing"
+]
+dependencies = [
+  "PyYAML>=6.0",
+  "jsonschema>=3.2"
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7"
+]
+
+[project.scripts]
+nav2_scenario_runner = "nav2_scenario_runner.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+nav2_scenario_runner = ["schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

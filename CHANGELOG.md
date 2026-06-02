@@ -1,0 +1,59 @@
+# Changelog
+
+## Unreleased
+
+- Add initial planning scaffold.
+- Add master architecture design draft.
+- Add DSL, metrics, simulator adapter, CI, plugin, and robot profile docs.
+- Add v1alpha1 scenario JSON Schema draft.
+- Add initial TurtleBot3 Gazebo scenario examples.
+- Add Python package scaffold with `nav2_scenario_runner` CLI.
+- Add `lint`, `list`, and `run --dry-run` commands.
+- Add JSON dry-run report generation.
+- Add CLI tests for validation and dry-run reporting.
+- Add execution engine for known v0.1 Nav2 steps.
+- Add optional ROS 2 attach backend for `wait_for_nav2_active`, `set_initial_pose`, `send_goal`, and `expect_goal_reached`.
+- Add fake backend for unit tests.
+- Add JUnit XML report generation for CI systems.
+- Add `compare` command for baseline status and metric regression checks.
+- Add `travel_time`, `travel_time.<goal_name>`, and `goal_reached` metrics for executed goal scenarios.
+- Add assertion evaluation for `goal_reached`, `travel_time`, and `timeout`.
+- Report unsupported assertions as skipped instead of silently ignoring them.
+- Add `path_length_traveled` metric and `path_length` assertion evaluation.
+- Integrate traveled path length from `/odom` in the ROS attach backend.
+- Add `replanning_count` metric and assertion evaluation.
+- Count replanning from `/plan` updates in the ROS attach backend.
+- Add `recovery_count` metric contract and assertion evaluation.
+- Keep ROS attach `recovery_count` unavailable until a reliable recovery event collector is implemented.
+- Add `collision_count` and `collision_free` metric contract and assertion evaluation.
+- Keep ROS attach collision collection unavailable until a simulator/contact source is implemented.
+- Add `init` command to generate starter scenario and GitHub Actions workflow files.
+- Add `doctor` command for Python, schema, and optional ROS 2/Nav2 environment checks.
+- Add repository CI workflow for tests, compile checks, schema sync, example YAML parsing, doctor, and init smoke testing.
+- Add `report` command to render JSON run reports as console or Markdown summaries.
+- Add GitHub Step Summary support and include it in generated GitHub Actions workflows.
+- Add self-contained HTML report rendering and include `reports/index.html` in generated CI artifacts.
+- Add `run --markdown-report`, `run --html-report`, and `run --github-summary` for direct CI report output.
+- Add `run --trace-report` to emit a scenario timeline artifact for failure diagnosis.
+- Add `compare --markdown-output` and `compare --github-summary` for PR-friendly regression summaries.
+- Add `doctor --check-gazebo` for Gazebo Sim CLI and `ros_gz_bridge` preflight checks.
+- Add `run --mode gazebo-sim` lifecycle smoke to launch `gz sim`, shut it down, and save simulator logs.
+- Add a minimal Gazebo Sim example world and Gazebo Sim lifecycle smoke documentation.
+- Validate missing local Gazebo Sim world paths before launching `gz sim`.
+- Add Gazebo Sim scenario artifact bundles with `scenario.yaml`, `gazebo.log`, and `metadata.json`.
+- Show scenario artifact bundle paths in console, Markdown, and HTML reports.
+- Add `run --skip-gazebo-preflight` for prevalidated Gazebo Sim CI images and test harnesses.
+- Record Gazebo Sim `error_type` and `preflight_skipped` in lifecycle metadata and metrics.
+- Add `doctor --check-ros-graph` for `ros2 node list` and `ros2 topic list` readiness checks.
+- Add `run --mode gazebo-sim --wait-for-clock` to verify `/clock` readiness and record clock metadata.
+- Add `run --mode gazebo-sim --execute-nav2` to run attach-style Nav2 scenario steps while Gazebo is active.
+- Add `run --mode gazebo-sim --launch-scenario-stack` to start scenario `simulator.launch` and `nav2.bringup` blocks with artifact logs.
+- Add `run --mode gazebo-sim --wait-for-ros-graph` to verify `ros2 node list` and `ros2 topic list` after simulator startup.
+- Add `run --mode gazebo-sim --wait-for-nav2` to verify Nav2 `NavigateToPose` action server readiness before executing steps.
+- Add `run --mode gazebo-sim --wait-for-navigation-data` to verify TF, map, and costmap topic readiness before executing steps.
+- Add `run --mode gazebo-sim --reset-world` to reset the Gazebo world before readiness checks and record reset metadata.
+- Add `run --mode gazebo-sim --execute-simulator-steps` for top-level static box `spawn_obstacle`, `delete_entity`, and `wait` steps.
+- Add top-level Gazebo Sim `move_entity` execution through `/world/<world>/set_pose` with single-pose and trajectory support.
+- Add `run --mode gazebo-sim --collect-contacts` to monitor Gazebo contact topics and emit `collision_count` / `collision_free`.
+- Add top-level Gazebo Sim `parallel` branch scheduling so simulator branches can run during `--execute-nav2`.
+- Add explicit step time offsets to trace reports so scheduled Gazebo Sim branches appear in timeline order.

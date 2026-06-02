@@ -1,0 +1,73 @@
+apiVersion: nav2.scenario/v1alpha1
+kind: Scenario
+
+metadata:
+  name: straight_line_goal
+  description: Robot should reach a goal 10m ahead without collision.
+  tags: [smoke, navigation, diff_drive]
+  owner: navigation-team
+
+runtime:
+  timeout: 90
+  use_sim_time: true
+  seed: 42
+  isolation:
+    ros_domain_id: auto
+    namespace: /robot1
+
+simulator:
+  type: gazebo_sim
+  headless: true
+  world: worlds/empty.sdf
+  launch:
+    package: my_robot_bringup
+    file: sim.launch.py
+
+robot:
+  profile: turtlebot3_waffle
+  initial_pose:
+    x: 0.0
+    y: 0.0
+    yaw: 0.0
+
+nav2:
+  bringup:
+    package: nav2_bringup
+    file: bringup_launch.py
+  params: config/nav2_params.yaml
+  map: maps/warehouse.yaml
+  autostart: true
+
+steps:
+  - wait_for_nav2_active:
+      timeout: 30
+
+  - set_initial_pose:
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+
+  - send_goal:
+      name: main_goal
+      pose:
+        x: 10.0
+        y: 0.0
+        yaw: 0.0
+
+  - expect_goal_reached:
+      goal: main_goal
+      timeout: 60
+
+assertions:
+  - collision_free: {}
+  - path_length:
+      max: 13.0
+  - travel_time:
+      max: 60.0
+  - recovery_count:
+      max: 0
+
+artifacts:
+  rosbag: on_failure
+  html_report: always
+  timeline: always
