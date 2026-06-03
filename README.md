@@ -1,5 +1,10 @@
 # nav2_scenario_runner
 
+[![CI](https://github.com/rsasaki0109/nav2_scenario_runner/actions/workflows/ci.yml/badge.svg)](https://github.com/rsasaki0109/nav2_scenario_runner/actions/workflows/ci.yml)
+[![GitHub Pages](https://github.com/rsasaki0109/nav2_scenario_runner/actions/workflows/pages.yml/badge.svg)](https://github.com/rsasaki0109/nav2_scenario_runner/actions/workflows/pages.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+
 Scenario-as-Code test runner for Nav2. Run repeatable navigation regression tests in simulation and CI.
 
 `nav2_scenario_runner` aims to bring a Playwright/Cypress-like developer experience to Nav2-based mobile robot development: write scenarios in YAML, run them from one CLI, collect Nav2-aware metrics, and publish CI-friendly reports.
