@@ -33,6 +33,7 @@ class RosAttachBackend:
         self._namespace = _normalize_namespace(namespace)
         self._last_odom_xy: tuple[float, float] | None = None
         self._path_length_traveled: float = 0.0
+        self._trajectory_points: list[dict[str, float]] = []
         self._replanning_count: int = 0
         self._received_odom = False
         self._owns_context = not rclpy.ok()
@@ -86,7 +87,7 @@ class RosAttachBackend:
         msg.pose.covariance[0] = 0.25
         msg.pose.covariance[7] = 0.25
         msg.pose.covariance[35] = 0.06853891945200942
-        for _ in range(5):
+        for _ in range(8):
             msg.header.stamp = self._node.get_clock().now().to_msg()
             self._initial_pose_pub.publish(msg)
             self._spin_for(0.2)
@@ -112,6 +113,7 @@ class RosAttachBackend:
     def reset_path_length_traveled(self) -> None:
         self._path_length_traveled = 0.0
         self._last_odom_xy = None
+        self._trajectory_points = []
         self._spin_for(0.05)
 
     def reset_replanning_count(self) -> None:
@@ -158,6 +160,11 @@ class RosAttachBackend:
     def get_collision_count(self) -> int | None:
         return None
 
+    def get_trajectory_points(self) -> list[dict[str, float]] | None:
+        if len(self._trajectory_points) < 2:
+            return None
+        return list(self._trajectory_points)
+
     def close(self) -> None:
         self._navigate_client.destroy()
         self._node.destroy_subscription(self._odom_sub)
@@ -182,7 +189,13 @@ class RosAttachBackend:
         y = float(msg.pose.pose.position.y)
         if self._last_odom_xy is not None:
             previous_x, previous_y = self._last_odom_xy
-            self._path_length_traveled += math.hypot(x - previous_x, y - previous_y)
+            delta = math.hypot(x - previous_x, y - previous_y)
+            self._path_length_traveled += delta
+            last_sample = self._trajectory_points[-1] if self._trajectory_points else None
+            if last_sample is None or math.hypot(x - last_sample["x"], y - last_sample["y"]) >= 0.02:
+                self._trajectory_points.append({"x": x, "y": y})
+        else:
+            self._trajectory_points.append({"x": x, "y": y})
         self._last_odom_xy = (x, y)
 
     def _plan_callback(self, _msg: Any) -> None:

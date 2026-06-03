@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from html import escape as html_escape
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ METRIC_ORDER = [
     "collision_free",
     "goal_reached",
 ]
+HIDDEN_METRICS = {"trajectory"}
 
 
 def load_run_report(path: Path) -> dict[str, Any]:
@@ -344,6 +346,39 @@ def format_html_report(report: dict[str, Any]) -> str:
       padding: 14px;
       margin-bottom: 12px;
     }}
+    .trajectory-panel {{
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr);
+      gap: 14px;
+      align-items: stretch;
+      margin: 10px 0 12px;
+    }}
+    .trajectory-svg {{
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }}
+    .trajectory-meta {{
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }}
+    .trajectory-meta strong {{
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.15;
+    }}
+    @media (max-width: 760px) {{
+      .trajectory-panel {{
+        grid-template-columns: 1fr;
+      }}
+    }}
     .reason {{ color: var(--fail); margin: 0 0 8px; }}
     ul {{ margin: 8px 0 0; padding-left: 20px; }}
     code {{
@@ -437,6 +472,11 @@ def _html_detail_section(scenario: dict[str, Any]) -> str:
     if scenario.get("failure_reason"):
         lines.append(f'<p class="reason">{_html(str(scenario["failure_reason"]))}</p>')
 
+    trajectory = _trajectory_html(scenario)
+    if trajectory:
+        lines.append("<h4>Trajectory</h4>")
+        lines.append(trajectory)
+
     artifact_items = _artifact_html_items(scenario)
     if artifact_items:
         lines.append("<h4>Artifacts</h4>")
@@ -483,6 +523,85 @@ def _html_summary_item(label: str, value: Any) -> str:
     )
 
 
+def _trajectory_html(scenario: dict[str, Any]) -> str:
+    points = _trajectory_points(scenario)
+    if len(points) < 2:
+        return ""
+
+    width = 640.0
+    height = 260.0
+    padding = 24.0
+    min_x = min(point["x"] for point in points)
+    max_x = max(point["x"] for point in points)
+    min_y = min(point["y"] for point in points)
+    max_y = max(point["y"] for point in points)
+    span_x = max(max_x - min_x, 0.1)
+    span_y = max(max_y - min_y, 0.1)
+    scale = min((width - 2 * padding) / span_x, (height - 2 * padding) / span_y)
+    draw_width = span_x * scale
+    draw_height = span_y * scale
+    offset_x = (width - draw_width) / 2
+    offset_y = (height - draw_height) / 2
+
+    def project(point: dict[str, float]) -> tuple[float, float]:
+        x = offset_x + (point["x"] - min_x) * scale
+        y = height - (offset_y + (point["y"] - min_y) * scale)
+        return x, y
+
+    projected = [project(point) for point in points]
+    polyline = " ".join(f"{x:.1f},{y:.1f}" for x, y in projected)
+    start_x, start_y = projected[0]
+    end_x, end_y = projected[-1]
+    start_label_x = min(start_x + 12, width - 58)
+    end_label_x = min(end_x + 12, width - 48)
+    grid_id = _html(_trajectory_grid_id(scenario))
+    metrics = _dict(scenario.get("metrics"))
+    distance = _metric_cell(metrics, "path_length_traveled", fallback="path_length")
+    travel_time = _metric_cell(metrics, "travel_time")
+
+    return f"""
+<div class="trajectory-panel">
+  <svg class="trajectory-svg" viewBox="0 0 {width:.0f} {height:.0f}" role="img" aria-label="Robot trajectory">
+    <defs>
+      <pattern id="{grid_id}" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e5ebf3" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect x="0" y="0" width="{width:.0f}" height="{height:.0f}" fill="url(#{grid_id})"/>
+    <polyline points="{_html(polyline)}" fill="none" stroke="#235fb2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="{start_x:.1f}" cy="{start_y:.1f}" r="8" fill="#147d52"/>
+    <circle cx="{end_x:.1f}" cy="{end_y:.1f}" r="8" fill="#bf2e2e"/>
+    <text x="{start_label_x:.1f}" y="{max(start_y - 10, 18):.1f}" fill="#147d52" font-size="15" font-weight="700">start</text>
+    <text x="{end_label_x:.1f}" y="{max(end_y - 10, 18):.1f}" fill="#bf2e2e" font-size="15" font-weight="700">goal</text>
+  </svg>
+  <div class="trajectory-meta">
+    <div><span>Traveled Path</span><strong>{_html(distance)} m</strong></div>
+    <div><span>Travel Time</span><strong>{_html(travel_time)} s</strong></div>
+    <div><span>Samples</span><strong>{len(points)}</strong></div>
+  </div>
+</div>
+"""
+
+
+def _trajectory_grid_id(scenario: dict[str, Any]) -> str:
+    scenario_id = str(scenario.get("scenario_id") or scenario.get("name") or "scenario")
+    safe_id = re.sub(r"[^A-Za-z0-9_-]+", "-", scenario_id).strip("-") or "scenario"
+    return f"trajectory-grid-{safe_id[:48]}"
+
+
+def _trajectory_points(scenario: dict[str, Any]) -> list[dict[str, float]]:
+    raw_points = _dict(scenario.get("metrics")).get("trajectory")
+    points = []
+    for raw_point in _list(raw_points):
+        if not isinstance(raw_point, dict):
+            continue
+        x = raw_point.get("x")
+        y = raw_point.get("y")
+        if isinstance(x, (int, float)) and isinstance(y, (int, float)) and not isinstance(x, bool) and not isinstance(y, bool):
+            points.append({"x": float(x), "y": float(y)})
+    return points
+
+
 def _interesting_steps(scenario: dict[str, Any]) -> list[dict[str, Any]]:
     return [
         step
@@ -496,6 +615,7 @@ def _has_detail_section(scenario: dict[str, Any]) -> bool:
         not _is_passing_scenario(scenario)
         or bool(_interesting_assertions(scenario))
         or bool(_artifact_metrics(scenario))
+        or bool(_trajectory_points(scenario))
     )
 
 
@@ -586,12 +706,14 @@ def _format_metric_summary(metrics_value: Any) -> str:
 
     keys = []
     for key in METRIC_ORDER:
-        if key in metrics:
+        if key in metrics and key not in HIDDEN_METRICS:
             keys.append(key)
     keys.extend(
         key
         for key in sorted(metrics)
-        if key not in keys and not ("." in key and key.split(".", 1)[0] in metrics)
+        if key not in keys
+        and key not in HIDDEN_METRICS
+        and not ("." in key and key.split(".", 1)[0] in metrics)
     )
     return ", ".join(f"{key}={_metric_value(metrics[key])}" for key in keys)
 
@@ -611,6 +733,8 @@ def _metric_value(value: Any) -> str:
         return str(value)
     if isinstance(value, float):
         return f"{value:.3f}".rstrip("0").rstrip(".")
+    if isinstance(value, list):
+        return f"{len(value)} points"
     if value is None:
         return "-"
     return str(value)

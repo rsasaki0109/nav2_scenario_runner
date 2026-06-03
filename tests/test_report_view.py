@@ -191,6 +191,11 @@ def test_html_report_shows_artifact_details_for_passing_scenario():
                     "artifact_dir": "reports/artifacts/straight_line_goal",
                     "gazebo_log": "reports/artifacts/straight_line_goal/gazebo.log",
                     "metadata": "reports/artifacts/straight_line_goal/metadata.json",
+                    "trajectory": [
+                        {"x": 0.0, "y": 0.0},
+                        {"x": 1.0, "y": 0.0},
+                    ],
+                    "trajectory_point_count": 2,
                 },
             }
         ],
@@ -200,4 +205,7 @@ def test_html_report_shows_artifact_details_for_passing_scenario():
 
     assert "Scenario Details" in text
     assert "straight_line_goal" in text
+    assert "<h4>Trajectory</h4>" in text
+    assert "Robot trajectory" in text
+    assert "<strong>2</strong>" in text
     assert "reports/artifacts/straight_line_goal/gazebo.log" in text

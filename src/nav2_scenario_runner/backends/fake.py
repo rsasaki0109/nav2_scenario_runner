@@ -16,6 +16,7 @@ class FakeNav2Backend:
     replanning_count: int = 0
     recovery_count: int = 0
     collision_count: int = 0
+    trajectory_points: list[dict[str, float]] = field(default_factory=list)
     simulated_recovery_count: int = 0
     simulated_collision_count: int = 0
 
@@ -57,10 +58,15 @@ class FakeNav2Backend:
         self.collision_count = self.simulated_collision_count
         goal_pose = self.goal_poses.get(goal_name)
         if self.current_pose and goal_pose:
+            start_pose = self.current_pose
             self.path_length_traveled = math.hypot(
-                goal_pose.x - self.current_pose.x,
-                goal_pose.y - self.current_pose.y,
+                goal_pose.x - start_pose.x,
+                goal_pose.y - start_pose.y,
             )
+            self.trajectory_points = [
+                {"x": start_pose.x, "y": start_pose.y},
+                {"x": goal_pose.x, "y": goal_pose.y},
+            ]
             self.current_pose = goal_pose
 
     def get_path_length_traveled(self) -> float | None:
@@ -78,6 +84,10 @@ class FakeNav2Backend:
     def get_collision_count(self) -> int | None:
         self.operations.append("get_collision_count")
         return self.collision_count
+
+    def get_trajectory_points(self) -> list[dict[str, float]] | None:
+        self.operations.append("get_trajectory_points")
+        return self.trajectory_points
 
     def close(self) -> None:
         self.operations.append("close")
