@@ -164,6 +164,13 @@ class ExecutionEngine:
             self._backend.set_initial_pose(_pose_from_mapping(step.params))
             return
 
+        if step.kind == "wait":
+            seconds = float(step.params.get("seconds", 0.0))
+            if seconds < 0:
+                raise StepExecutionError("wait.seconds must be non-negative.")
+            time.sleep(seconds)
+            return
+
         if step.kind == "send_goal":
             pose_data = step.params.get("pose", step.params)
             pose = _pose_from_mapping(pose_data)

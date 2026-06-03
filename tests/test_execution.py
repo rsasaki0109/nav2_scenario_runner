@@ -74,6 +74,52 @@ def test_execution_engine_records_travel_time_metric():
     assert result.metrics["collision_free"] is True
 
 
+def test_execution_engine_runs_wait_step():
+    scenario = Scenario(
+        path=Path("wait.yaml"),
+        document={
+            "apiVersion": "nav2.scenario/v1alpha1",
+            "kind": "Scenario",
+            "metadata": {"name": "wait"},
+            "steps": [{"wait": {"seconds": 0.0}}],
+        },
+        scenario_id="wait",
+        name="wait",
+        tags=set(),
+        step_count=1,
+        assertion_count=0,
+    )
+
+    result = ExecutionEngine(FakeNav2Backend()).run(scenario)
+
+    assert result.status == "passed"
+    assert result.steps is not None
+    assert result.steps[0].kind == "wait"
+    assert result.steps[0].status == "passed"
+
+
+def test_execution_engine_rejects_negative_wait_step():
+    scenario = Scenario(
+        path=Path("negative_wait.yaml"),
+        document={
+            "apiVersion": "nav2.scenario/v1alpha1",
+            "kind": "Scenario",
+            "metadata": {"name": "negative_wait"},
+            "steps": [{"wait": {"seconds": -1.0}}],
+        },
+        scenario_id="negative_wait",
+        name="negative_wait",
+        tags=set(),
+        step_count=1,
+        assertion_count=0,
+    )
+
+    result = ExecutionEngine(FakeNav2Backend()).run(scenario)
+
+    assert result.status == "failed"
+    assert result.failure_reason == "wait.seconds must be non-negative."
+
+
 def test_execution_engine_fails_when_supported_assertion_fails():
     scenario = Scenario(
         path=Path("slow.yaml"),
