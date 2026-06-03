@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Callable, Union
+from typing import Any, Callable
 
 from . import __version__
 from .scenario import Scenario
 
 
-MetricValue = Union[int, float, str, bool]
+MetricValue = Any
 
 
 @dataclass(frozen=True)

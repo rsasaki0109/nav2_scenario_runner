@@ -48,7 +48,7 @@ The script starts:
 
 - `nav2_bringup`'s TurtleBot3 simulation in headless Gazebo Classic
 - a temporary `nav2_scenario_runner --mode attach` scenario that sends a short real Nav2 goal
-- the Playwright browser recorder against the generated HTML report
+- the Playwright browser recorder against the generated HTML report, including metrics and the sampled `/odom` trajectory
 
 By default the script runs in `ROS_DOMAIN_ID=42` to avoid mixing with any existing ROS graph on the machine. Override it when needed:
 
@@ -100,7 +100,7 @@ Once the GIF exists, add this near the top of `README.md`:
 ```md
 <p align="center">
   <img src="docs/assets/nav2-scenario-runner-demo.gif"
-       alt="nav2_scenario_runner running a Nav2 dynamic obstacle scenario and generating reports"
+       alt="nav2_scenario_runner report from a real Nav2 TurtleBot3 scenario in Gazebo"
        width="900">
 </p>
 ```

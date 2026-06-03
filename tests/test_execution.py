@@ -35,6 +35,7 @@ def test_execution_engine_runs_supported_nav2_steps():
         "get_replanning_count",
         "get_recovery_count",
         "get_collision_count",
+        "get_trajectory_points",
         "close",
     ]
     assert result.assertions is not None
@@ -72,6 +73,8 @@ def test_execution_engine_records_travel_time_metric():
     assert result.metrics["collision_count"] == 0
     assert result.metrics["collision_count.main_goal"] == 0
     assert result.metrics["collision_free"] is True
+    assert result.metrics["trajectory"] == [{"x": 0, "y": 0}, {"x": 10, "y": 0}]
+    assert result.metrics["trajectory_point_count"] == 2
 
 
 def test_execution_engine_runs_wait_step():

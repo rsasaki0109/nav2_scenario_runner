@@ -137,6 +137,12 @@ steps:
       yaw: 0.0
   - wait:
       seconds: 3
+  - set_initial_pose:
+      x: -2.0
+      y: -0.5
+      yaw: 0.0
+  - wait:
+      seconds: 6
   - send_goal:
       name: main_goal
       pose:

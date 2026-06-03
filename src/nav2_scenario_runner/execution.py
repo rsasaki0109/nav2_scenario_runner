@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Callable, Protocol, Union
+from typing import Any, Callable, Protocol
 
 from .assertions import assertion_results_passed, evaluate_assertions, first_failed_assertion
 from .runner import ScenarioRunResult, StepRunResult
@@ -69,6 +69,9 @@ class Nav2ExecutionBackend(Protocol):
     def get_collision_count(self) -> int | None:
         ...
 
+    def get_trajectory_points(self) -> list[dict[str, float]] | None:
+        ...
+
     def close(self) -> None:
         ...
 
@@ -79,7 +82,7 @@ class ExecutionEngine:
         self._clock = clock
         self._run_started_at = 0.0
         self._goal_started_at: dict[str, float] = {}
-        self._metrics: dict[str, Union[int, float, str, bool]] = {}
+        self._metrics: dict[str, Any] = {}
 
     def run(self, scenario: Scenario) -> ScenarioRunResult:
         started = self._clock()
@@ -218,6 +221,10 @@ class ExecutionEngine:
             self._metrics["collision_count"] = collision_count
             self._metrics[f"collision_count.{goal_name}"] = collision_count
             self._metrics["collision_free"] = collision_count == 0
+        trajectory = self._backend.get_trajectory_points()
+        if trajectory:
+            self._metrics["trajectory"] = trajectory
+            self._metrics["trajectory_point_count"] = len(trajectory)
 
 
 def parse_steps(scenario: Scenario) -> list[ScenarioStep]:
