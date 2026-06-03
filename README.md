@@ -4,11 +4,17 @@ Scenario-as-Code test runner for Nav2. Run repeatable navigation regression test
 
 `nav2_scenario_runner` aims to bring a Playwright/Cypress-like developer experience to Nav2-based mobile robot development: write scenarios in YAML, run them from one CLI, collect Nav2-aware metrics, and publish CI-friendly reports.
 
+<p align="center">
+  <img src="docs/assets/nav2-scenario-runner-demo.gif"
+       alt="nav2_scenario_runner report from a real Nav2 TurtleBot3 scenario in Gazebo"
+       width="900">
+</p>
+
 ```bash
 nav2_scenario_runner run examples/turtlebot3_gazebo/smoke.yaml
 ```
 
-The README demo GIF should be captured from a real Nav2/Gazebo/Foxglove run, not a toy animation. See [docs/demo-capture.md](docs/demo-capture.md) for the Playwright recorder workflow and `scripts/record_nav2_foxglove_demo.sh`.
+The README demo GIF is captured from a real Nav2/Gazebo run, not a toy animation. See [docs/demo-capture.md](docs/demo-capture.md) for the Playwright recorder workflow and `scripts/record_nav2_foxglove_demo.sh`.
 
 Current scaffold usage from a source checkout:
 

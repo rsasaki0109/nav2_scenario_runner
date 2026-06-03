@@ -79,7 +79,6 @@ class RosAttachBackend:
     def set_initial_pose(self, pose: Pose2D) -> None:
         msg = self._PoseWithCovarianceStamped()
         msg.header.frame_id = pose.frame
-        msg.header.stamp = self._node.get_clock().now().to_msg()
         msg.pose.pose.position.x = pose.x
         msg.pose.pose.position.y = pose.y
         msg.pose.pose.orientation.z = math.sin(pose.yaw / 2.0)
@@ -87,8 +86,10 @@ class RosAttachBackend:
         msg.pose.covariance[0] = 0.25
         msg.pose.covariance[7] = 0.25
         msg.pose.covariance[35] = 0.06853891945200942
-        self._initial_pose_pub.publish(msg)
-        self._spin_for(0.1)
+        for _ in range(5):
+            msg.header.stamp = self._node.get_clock().now().to_msg()
+            self._initial_pose_pub.publish(msg)
+            self._spin_for(0.2)
 
     def send_goal(self, name: str, pose: Pose2D, behavior_tree: str | None = None) -> None:
         goal_msg = self._NavigateToPose.Goal()
