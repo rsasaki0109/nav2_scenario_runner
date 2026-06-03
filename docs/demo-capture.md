@@ -20,6 +20,52 @@ python3 scripts/record_browser_demo.py \
 - `python3 -m pip install playwright`
 - `python3 -m playwright install chromium`
 - `ffmpeg`
+- For the bundled Nav2 TurtleBot3 demo capture script:
+  - ROS 2 Humble
+  - `nav2_bringup`
+  - `foxglove_bridge`
+  - Gazebo Classic `gzserver`
+  - `gazebo_ros`
+
+On Ubuntu 22.04 with ROS 2 Humble, the missing demo packages are usually:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y gazebo ros-humble-gazebo-ros-pkgs ros-humble-foxglove-bridge
+```
+
+## One-Command Nav2/Foxglove Demo Capture
+
+After the packages above are installed, run:
+
+```bash
+scripts/record_nav2_foxglove_demo.sh
+```
+
+The script starts:
+
+- `nav2_bringup`'s TurtleBot3 simulation in headless Gazebo Classic
+- `foxglove_bridge` on `ws://localhost:8765`
+- the Playwright browser recorder
+- a temporary `nav2_scenario_runner --mode attach` scenario that sends a short real Nav2 goal
+
+Default output:
+
+```text
+docs/assets/nav2-scenario-runner-demo.gif
+```
+
+Logs and generated reports are written under:
+
+```text
+reports/demo-capture/
+```
+
+Useful overrides:
+
+```bash
+OUTPUT=/tmp/demo.gif DURATION=20 FPS=8 scripts/record_nav2_foxglove_demo.sh
+```
 
 ## Recommended README Demo
 
