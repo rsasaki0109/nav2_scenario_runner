@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>nav2_scenario_runner</title>
+  <meta name="description" content="Scenario-as-Code test runner for Nav2. Run repeatable navigation regression tests in simulation and CI.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #111827;
+      --muted: #5b6473;
+      --border: #d9e0ea;
+      --blue: #235fb2;
+      --green: #147d52;
+      --amber: #a35d00;
+      --red: #b4232a;
+      --ink: #0c1726;
+      --code: #0f1f2f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      width: min(100% - 40px, 1180px);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+      gap: 32px;
+      align-items: center;
+      padding: 54px 0 34px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 54px;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 20px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 19px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .button.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #ffffff;
+    }
+
+    .command {
+      margin-top: 26px;
+      background: var(--code);
+      border-radius: 8px;
+      color: #ecf4ff;
+      overflow: auto;
+      border: 1px solid #203447;
+    }
+
+    .command pre {
+      margin: 0;
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .media {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(17, 24, 39, 0.12);
+      margin: 0;
+    }
+
+    .media img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .media-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    section {
+      padding: 34px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .yaml,
+    .summary {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .block-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .yaml pre {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      background: #fbfdff;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .summary table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    .summary th,
+    .summary td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .summary th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .pass {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .warn {
+      color: var(--amber);
+      font-weight: 800;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .doc-link {
+      min-height: 92px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .doc-link span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 26px 0 36px;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .grid,
+      .docs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 24px, 1180px);
+      }
+
+      header,
+      footer,
+      .media-caption {
+        display: block;
+      }
+
+      nav {
+        margin-top: 12px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .lead {
+        font-size: 17px;
+      }
+
+      .grid,
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary th,
+      .summary td {
+        padding: 10px 8px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        font-size: 12px;
+      }
+
+      .summary th:nth-child(5),
+      .summary td:nth-child(5) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        nav2_scenario_runner
+        <span>Scenario-as-Code test runner for Nav2</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="#quickstart">Quickstart</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#docs">Docs</a>
+        <a href="https://github.com/rsasaki0109/nav2_scenario_runner">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Nav2 scenario tests that feel like web E2E tests.</h1>
+          <p class="lead">
+            Write navigation scenarios in YAML, run them from one CLI, collect Nav2-aware metrics,
+            and publish CI reports that explain regressions.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#quickstart">Start Testing</a>
+            <a class="button" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/scenario-dsl.md">Scenario DSL</a>
+            <a class="button" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/ci.md">CI Guide</a>
+          </div>
+          <div class="command" id="quickstart">
+            <pre><code>python3 -m pip install -e .
+nav2_scenario_runner init .
+nav2_scenario_runner run scenarios/ \
+  --report-dir reports/ \
+  --html-report index.html</code></pre>
+          </div>
+        </div>
+
+        <figure class="media">
+          <img src="assets/nav2-scenario-runner-demo.gif" alt="HTML report generated from a real Nav2 TurtleBot3 scenario in Gazebo, including metrics and robot trajectory">
+          <figcaption class="media-caption">
+            <span>Real Nav2/Gazebo run</span>
+            <span>metrics + sampled /odom trajectory</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section aria-labelledby="value-title">
+        <h2 id="value-title">Built For Navigation Regression</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Scenario YAML</h3>
+            <p>Review goals, waits, dynamic obstacles, and assertions as code in pull requests.</p>
+          </article>
+          <article class="card">
+            <h3>Nav2 Semantics</h3>
+            <p>Track goal success, travel time, path length, replans, recoveries, and collision signals.</p>
+          </article>
+          <article class="card">
+            <h3>CI Artifacts</h3>
+            <p>Emit JSON, JUnit XML, Markdown, HTML reports, GitHub summaries, and trace timelines.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" aria-labelledby="workflow-title">
+        <h2 id="workflow-title">One Scenario, Reviewable Output</h2>
+        <div class="workflow">
+          <div class="yaml">
+            <div class="block-title">scenario.yaml</div>
+            <pre><code>apiVersion: nav2.scenario/v1alpha1
+kind: Scenario
+metadata:
+  name: straight_line_goal
+  tags: [smoke, navigation]
+steps:
+  - wait_for_nav2_active: {timeout: 30}
+  - set_initial_pose: {x: 0, y: 0, yaw: 0}
+  - send_goal:
+      name: main_goal
+      pose: {x: 10, y: 0, yaw: 0}
+  - expect_goal_reached:
+      goal: main_goal
+      timeout: 60
+assertions:
+  - goal_reached: {}
+  - path_length: {max: 13.0}
+  - travel_time: {max: 60.0}</code></pre>
+          </div>
+
+          <div class="summary">
+            <div class="block-title">CI summary</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                  <th>Path</th>
+                  <th>Replan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>straight_line_goal</td>
+                  <td class="pass">passed</td>
+                  <td>9.44s</td>
+                  <td>2.28m</td>
+                  <td>9</td>
+                </tr>
+                <tr>
+                  <td>dynamic_obstacle</td>
+                  <td class="warn">warning</td>
+                  <td>31.8s</td>
+                  <td>11.4m</td>
+                  <td>6</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" aria-labelledby="docs-title">
+        <h2 id="docs-title">Documentation</h2>
+        <div class="docs-grid">
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/master-architecture.md">Architecture<span>Design goals, components, roadmap</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/scenario-dsl.md">Scenario DSL<span>YAML schema, actions, assertions</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/metrics.md">Metrics<span>Outcome, quality, behavior, regression</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/ci.md">CI/CD<span>GitHub Actions, reports, artifacts</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/gazebo-sim.md">Gazebo Sim<span>Adapter lifecycle and execution</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/doctor.md">Doctor<span>Environment checks and diagnostics</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/simulator-adapters.md">Adapters<span>Gazebo, Webots, Isaac, RMF boundaries</span></a>
+          <a class="doc-link" href="https://github.com/rsasaki0109/nav2_scenario_runner/blob/main/docs/plugin-authoring.md">Plugins<span>Action, assertion, metric, reporter plugins</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Apache-2.0. Built for Nav2 users, AMR teams, and CI maintainers.</span>
+      <span><a href="https://github.com/rsasaki0109/nav2_scenario_runner">View repository</a></span>
+    </footer>
+  </div>
+</body>
+</html>
