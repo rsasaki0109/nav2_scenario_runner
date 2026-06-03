@@ -4,6 +4,8 @@ Scenario-as-Code test runner for Nav2. Run repeatable navigation regression test
 
 `nav2_scenario_runner` aims to bring a Playwright/Cypress-like developer experience to Nav2-based mobile robot development: write scenarios in YAML, run them from one CLI, collect Nav2-aware metrics, and publish CI-friendly reports.
 
+Project site: <https://rsasaki0109.github.io/nav2_scenario_runner/>
+
 <p align="center">
   <img src="docs/assets/nav2-scenario-runner-demo.gif"
        alt="nav2_scenario_runner report from a real Nav2 TurtleBot3 scenario in Gazebo"
