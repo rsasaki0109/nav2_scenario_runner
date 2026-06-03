@@ -57,3 +57,5 @@
 - Add `run --mode gazebo-sim --collect-contacts` to monitor Gazebo contact topics and emit `collision_count` / `collision_free`.
 - Add top-level Gazebo Sim `parallel` branch scheduling so simulator branches can run during `--execute-nav2`.
 - Add explicit step time offsets to trace reports so scheduled Gazebo Sim branches appear in timeline order.
+- Add a Playwright-based browser demo recorder and demo capture documentation for real Foxglove recordings.
+- Add a Nav2/Foxglove demo capture script that launches the Nav2 TurtleBot3 simulation, Foxglove Bridge, browser recording, and a real attach-mode goal scenario.
