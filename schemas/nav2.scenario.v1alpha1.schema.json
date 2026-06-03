@@ -1,0 +1,590 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://nav2-scenario-runner.dev/schemas/nav2.scenario.v1alpha1.schema.json",
+  "title": "Nav2 Scenario v1alpha1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind"],
+  "properties": {
+    "apiVersion": {
+      "const": "nav2.scenario/v1alpha1"
+    },
+    "kind": {
+      "enum": ["Scenario", "Template"]
+    },
+    "metadata": {
+      "$ref": "#/definitions/metadata"
+    },
+    "runtime": {
+      "$ref": "#/definitions/runtime"
+    },
+    "requires": {
+      "$ref": "#/definitions/requires"
+    },
+    "simulator": {
+      "$ref": "#/definitions/simulator"
+    },
+    "robot": {
+      "$ref": "#/definitions/robot"
+    },
+    "nav2": {
+      "$ref": "#/definitions/nav2"
+    },
+    "fixture": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixtures": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "use": {
+      "$ref": "#/definitions/template_use"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/step"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/assertion"
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "regression": {
+      "$ref": "#/definitions/regression"
+    },
+    "failure": {
+      "$ref": "#/definitions/failure_policy"
+    },
+    "artifacts": {
+      "$ref": "#/definitions/artifacts"
+    },
+    "retries": {
+      "$ref": "#/definitions/retries"
+    }
+  },
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "owner": {
+          "type": "string"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout": {
+          "$ref": "#/definitions/non_negative_number"
+        },
+        "use_sim_time": {
+          "type": "boolean"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "isolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ros_domain_id": {
+              "oneOf": [
+                {
+                  "const": "auto"
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 232
+                }
+              ]
+            },
+            "namespace": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "robot": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "kinematics": {
+              "type": "array",
+              "items": {
+                "enum": ["differential", "ackermann", "omnidirectional", "legged"]
+              }
+            },
+            "min_lidar_range": {
+              "$ref": "#/definitions/non_negative_number"
+            }
+          }
+        },
+        "simulator": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "simulator": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headless": {
+          "type": "boolean"
+        },
+        "world": {
+          "type": "string"
+        },
+        "launch": {
+          "$ref": "#/definitions/launch_file"
+        }
+      }
+    },
+    "robot": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "initial_pose": {
+          "$ref": "#/definitions/pose2d"
+        },
+        "kinematics": {
+          "enum": ["differential", "ackermann", "omnidirectional", "legged"]
+        },
+        "frames": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "topics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "footprint": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "nav2": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "bringup": {
+          "$ref": "#/definitions/launch_file"
+        },
+        "params": {
+          "type": "string"
+        },
+        "map": {
+          "type": "string"
+        },
+        "autostart": {
+          "type": "boolean"
+        }
+      }
+    },
+    "launch_file": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "package": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "args": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "template_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template"],
+      "properties": {
+        "template": {
+          "type": "string",
+          "minLength": 1
+        },
+        "with": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": {
+        "type": ["object", "array", "string", "number", "boolean", "null"]
+      },
+      "properties": {
+        "wait_for_nav2_active": {
+          "$ref": "#/definitions/timeout_object"
+        },
+        "set_initial_pose": {
+          "$ref": "#/definitions/pose2d"
+        },
+        "send_goal": {
+          "$ref": "#/definitions/send_goal"
+        },
+        "expect_goal_reached": {
+          "$ref": "#/definitions/expect_goal_reached"
+        },
+        "send_waypoints": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "cancel_goal": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "clear_costmaps": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "select_planner": {
+          "$ref": "#/definitions/id_object"
+        },
+        "select_controller": {
+          "$ref": "#/definitions/id_object"
+        },
+        "spawn_obstacle": {
+          "$ref": "#/definitions/spawn_obstacle"
+        },
+        "delete_entity": {
+          "$ref": "#/definitions/name_object"
+        },
+        "move_entity": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "spawn_person": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "set_door": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "wait": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["seconds"],
+          "properties": {
+            "seconds": {
+              "$ref": "#/definitions/non_negative_number"
+            }
+          }
+        },
+        "wait_until": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "wait_for_topic": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "wait_for_transform": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "on_event": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "parallel": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "if": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "call_service": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "log": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": {
+        "type": ["object", "array", "string", "number", "boolean", "null"]
+      },
+      "properties": {
+        "goal_reached": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "collision_free": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "timeout": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "path_length": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "travel_time": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "recovery_count": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "replanning_count": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "minimum_clearance": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "final_pose": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "send_goal": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pose": {
+          "$ref": "#/definitions/pose2d"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "yaw": {
+          "type": "number"
+        },
+        "behavior_tree": {
+          "type": "string"
+        }
+      }
+    },
+    "expect_goal_reached": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "goal": {
+          "type": "string"
+        },
+        "timeout": {
+          "$ref": "#/definitions/non_negative_number"
+        },
+        "tolerance_xy": {
+          "$ref": "#/definitions/non_negative_number"
+        },
+        "tolerance_yaw": {
+          "$ref": "#/definitions/non_negative_number"
+        }
+      }
+    },
+    "spawn_obstacle": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string"
+        },
+        "pose": {
+          "$ref": "#/definitions/pose2d"
+        },
+        "size": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "id_object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "name_object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "timeout_object": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout": {
+          "$ref": "#/definitions/non_negative_number"
+        }
+      }
+    },
+    "pose2d": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "yaw"],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "yaw": {
+          "type": "number"
+        },
+        "frame": {
+          "type": "string"
+        }
+      }
+    },
+    "regression": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "baseline": {
+          "type": "string"
+        },
+        "baseline_source": {
+          "type": "string"
+        },
+        "compare": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "rules": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "failure_policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "mode": {
+          "enum": ["fail_fast", "continue", "diagnostic", "interactive"]
+        },
+        "on_failure": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": ["never", "always", "on_failure"]
+      }
+    },
+    "retries": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "classify_flake": {
+          "type": "boolean"
+        }
+      }
+    },
+    "non_negative_number": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

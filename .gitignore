@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# ROS 2 / colcon
+build/
+install/
+log/
+
+# Runner artifacts
+reports/
+*.bag
+*.db3
+rosbag2_*/
+
+# Editors
+.idea/
+.vscode/
+*.swp

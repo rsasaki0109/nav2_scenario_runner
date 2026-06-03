@@ -1,0 +1,30 @@
+name: Nav2 Scenario Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scenario-test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/nav2-scenario-runner/nav2-scenario-runner:jazzy-gazebo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Nav2 scenarios
+        run: >
+          nav2_scenario_runner run scenarios/
+          --report-dir reports/
+          --junit-report junit.xml
+          --trace-report trace.json
+          --html-report index.html
+          --github-summary
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nav2-scenario-report
+          path: reports/

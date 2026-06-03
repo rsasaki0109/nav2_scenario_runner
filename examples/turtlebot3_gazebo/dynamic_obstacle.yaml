@@ -1,0 +1,73 @@
+apiVersion: nav2.scenario/v1alpha1
+kind: Scenario
+
+metadata:
+  name: dynamic_obstacle_crossing
+  description: Robot should replan around a crossing obstacle and still reach the goal.
+  tags: [regression, dynamic_obstacle, navigation]
+
+runtime:
+  timeout: 120
+  use_sim_time: true
+  seed: 42
+
+simulator:
+  type: gazebo_sim
+  headless: true
+  world: worlds/empty.sdf
+
+robot:
+  profile: turtlebot3_waffle
+  initial_pose: {x: 0.0, y: 0.0, yaw: 0.0}
+
+steps:
+  - wait_for_nav2_active:
+      timeout: 30
+
+  - set_initial_pose:
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+
+  - parallel:
+      join: all
+      branches:
+        - name: navigation
+          steps:
+            - send_goal:
+                name: main_goal
+                pose: {x: 10.0, y: 0.0, yaw: 0.0}
+            - expect_goal_reached:
+                goal: main_goal
+                timeout: 90
+
+        - name: obstacle
+          steps:
+            - wait:
+                seconds: 8
+            - spawn_obstacle:
+                name: crossing_box
+                type: box
+                pose: {x: 5.0, y: -0.8, yaw: 0.0}
+                size: {x: 0.7, y: 0.7, z: 1.0}
+            - move_entity:
+                name: crossing_box
+                trajectory:
+                  - at: 0.0
+                    pose: {x: 5.0, y: -0.8, yaw: 0.0}
+                  - at: 4.0
+                    pose: {x: 5.0, y: 0.8, yaw: 0.0}
+
+assertions:
+  - collision_free: {}
+  - travel_time:
+      max: 90.0
+  - recovery_count:
+      max: 2
+  - replanning_count:
+      max: 10
+
+artifacts:
+  rosbag: on_failure
+  html_report: always
+  timeline: always
