@@ -48,6 +48,13 @@ echo "Building replay dashboard..."
   --duration 5 \
   --html-output "$OUT/replay.html"
 
+echo "Building interactive viewer..."
+"${RUN[@]}" viewer \
+  "${EVAL_ENTRIES[@]}" \
+  --map "$BENCH/maps/warehouse.yaml" \
+  --title "Nav2 Benchmark Explorer" \
+  --html-output "$OUT/viewer.html"
+
 echo "Building shields endpoint badges..."
 for kind in winner score passrate regressions; do
   "${RUN[@]}" badge \
@@ -57,5 +64,5 @@ for kind in winner score passrate regressions; do
     --output "$OUT/badge-$kind.json"
 done
 
-echo "Dashboards written to $OUT/{evaluation,trend,replay}.html"
+echo "Dashboards written to $OUT/{evaluation,trend,replay,viewer}.html"
 echo "Badges written to $OUT/badge-{winner,score,passrate,regressions}.json"
