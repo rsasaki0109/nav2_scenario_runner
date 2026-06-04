@@ -1,0 +1,40 @@
+{
+  "schema": "nav2_scenario_runner.evaluation/v1alpha1",
+  "scenario_count": 3,
+  "metrics": [
+    "travel_time",
+    "path_length_traveled",
+    "recovery_count",
+    "replanning_count",
+    "collision_free"
+  ],
+  "leaderboard": [
+    {
+      "rank": 1,
+      "label": "navfn",
+      "score": 73.75,
+      "pass_rate": 1.0,
+      "passed": 3,
+      "total": 3,
+      "wins": 5
+    },
+    {
+      "rank": 2,
+      "label": "smac",
+      "score": 73.33,
+      "pass_rate": 1.0,
+      "passed": 3,
+      "total": 3,
+      "wins": 11
+    },
+    {
+      "rank": 3,
+      "label": "teb",
+      "score": 46.67,
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "total": 3,
+      "wins": 7
+    }
+  ]
+}
