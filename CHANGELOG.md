@@ -59,3 +59,7 @@
 - Add explicit step time offsets to trace reports so scheduled Gazebo Sim branches appear in timeline order.
 - Add a Playwright-based browser demo recorder and demo capture documentation for real Foxglove recordings.
 - Add a Nav2/Foxglove demo capture script that launches the Nav2 TurtleBot3 simulation, Foxglove Bridge, browser recording, and a real attach-mode goal scenario.
+- Add `evaluate` command to rank multiple Nav2 configurations across a scenario suite into a leaderboard dashboard.
+- Score each configuration 0-100 by normalizing metrics per scenario, with metric direction defaults and `--lower-is-better` / `--higher-is-better` overrides.
+- Render an `evaluate` HTML dashboard with a medal leaderboard, relative-goodness metric bars, and per-scenario trajectory overlays across configurations.
+- Render `evaluate` Markdown and machine-readable leaderboard JSON, and support `--github-summary` for pull request evaluation.
