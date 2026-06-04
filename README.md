@@ -181,6 +181,22 @@ charts, plus Markdown with direction-aware latest-vs-previous deltas. This lets
 CI catch a slow navigation regression that no single run would fail. See
 [docs/trend.md](docs/trend.md).
 
+Animated trajectory replay over a map:
+
+```bash
+nav2_scenario_runner replay reports/results.json \
+  --map maps/warehouse.yaml \
+  --html-output reports/replay.html \
+  --duration 5
+```
+
+`replay` renders each scenario's recorded `/odom` trajectory as an animated SVG:
+the robot marker travels the path on a loop via SMIL `animateMotion` (no
+JavaScript), and with `--map` the path is drawn over the real ROS occupancy grid
+(P2/P5 PGM) instead of a blank grid. The PGM is re-encoded to an embedded PNG
+with the standard library only, so the output is a single self-contained HTML
+file. See [docs/replay.md](docs/replay.md).
+
 `--mode attach` currently supports:
 
 - `wait_for_nav2_active`
@@ -310,6 +326,7 @@ docs/
   metrics.md
   evaluation.md
   trend.md
+  replay.md
   simulator-adapters.md
   ci.md
   plugin-authoring.md
