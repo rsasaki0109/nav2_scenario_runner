@@ -7,6 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from . import __version__
+from .badges import KINDS as _BADGE_KINDS
 from .compare import (
     compare_report_files,
     format_compare_markdown,
@@ -368,6 +369,37 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the Markdown comment to this path (also printed to stdout).",
     )
 
+    badge_parser = subparsers.add_parser(
+        "badge",
+        help="Emit a shields.io endpoint badge JSON from evaluate/trend JSON.",
+    )
+    badge_parser.add_argument(
+        "--evaluation",
+        type=Path,
+        required=True,
+        metavar="EVALUATION.json",
+        help="Leaderboard JSON produced by 'evaluate --json-output'.",
+    )
+    badge_parser.add_argument(
+        "--trend",
+        type=Path,
+        default=None,
+        metavar="TREND.json",
+        help="Trend JSON produced by 'trend --json-output' (required for --kind regressions).",
+    )
+    badge_parser.add_argument(
+        "--kind",
+        choices=list(_BADGE_KINDS),
+        default="score",
+        help="Which badge to emit.",
+    )
+    badge_parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Write the badge JSON to this path (also printed to stdout).",
+    )
+
     compare_parser = subparsers.add_parser("compare", help="Compare current JSON report against a baseline.")
     compare_parser.add_argument("current", type=Path, help="Current JSON report path.")
     compare_parser.add_argument("--baseline", type=Path, required=True, help="Baseline JSON report path.")
@@ -456,6 +488,14 @@ def main(argv: list[str] | None = None) -> int:
             trend_path=args.trend,
             title=args.title,
             dashboard_url=args.dashboard_url,
+            output_path=args.output,
+        )
+
+    if args.command == "badge":
+        return _cmd_badge(
+            evaluation_path=args.evaluation,
+            trend_path=args.trend,
+            kind=args.kind,
             output_path=args.output,
         )
 
@@ -741,6 +781,35 @@ def _cmd_pr_comment(
         print(f"PR comment: {output_path}")
     else:
         print(body, end="")
+    return 0
+
+
+def _cmd_badge(
+    evaluation_path: Path,
+    trend_path: Path | None,
+    kind: str,
+    output_path: Path | None,
+) -> int:
+    import json
+
+    from .badges import build_badge
+
+    try:
+        evaluation = json.loads(evaluation_path.read_text(encoding="utf-8"))
+        trend = (
+            json.loads(trend_path.read_text(encoding="utf-8")) if trend_path else None
+        )
+        badge = build_badge(kind, evaluation, trend)
+    except (OSError, ValueError) as exc:
+        print(f"Badge failed: {exc}", file=sys.stderr)
+        return 2
+
+    rendered = json.dumps(badge, indent=2, ensure_ascii=False) + "\n"
+    if output_path:
+        write_text_report(rendered, output_path)
+        print(f"Badge JSON: {output_path}")
+    else:
+        print(rendered, end="")
     return 0
 
 

@@ -17,11 +17,23 @@ fi
 BENCH="examples/benchmark"
 OUT="docs"
 
+# Core configurations plus any merged community submissions. A merged
+# submission PR (a run report under submissions/) appears on the live
+# leaderboard on the next deploy. Sorted for deterministic output.
+EVAL_ENTRIES=(
+  --entry navfn="$BENCH/navfn.json"
+  --entry smac="$BENCH/smac.json"
+  --entry teb="$BENCH/teb.json"
+)
+for submission in $(find "$BENCH/submissions" -maxdepth 1 -name '*.json' 2>/dev/null | sort); do
+  label="$(basename "$submission" .json)"
+  EVAL_ENTRIES+=(--entry "$label=$submission")
+  echo "Including community submission: $label"
+done
+
 echo "Building evaluation dashboard..."
 "${RUN[@]}" evaluate \
-  --entry navfn="$BENCH/navfn.json" \
-  --entry smac="$BENCH/smac.json" \
-  --entry teb="$BENCH/teb.json" \
+  "${EVAL_ENTRIES[@]}" \
   --html-output "$OUT/evaluation.html" \
   --json-output "$OUT/evaluation.json"
 
@@ -36,4 +48,14 @@ echo "Building replay dashboard..."
   --duration 5 \
   --html-output "$OUT/replay.html"
 
+echo "Building shields endpoint badges..."
+for kind in winner score passrate regressions; do
+  "${RUN[@]}" badge \
+    --evaluation "$OUT/evaluation.json" \
+    --trend "$OUT/trend.json" \
+    --kind "$kind" \
+    --output "$OUT/badge-$kind.json"
+done
+
 echo "Dashboards written to $OUT/{evaluation,trend,replay}.html"
+echo "Badges written to $OUT/badge-{winner,score,passrate,regressions}.json"
