@@ -69,3 +69,7 @@
 - Add `replay` command to render an animated SVG trajectory replay from a run report, with the robot marker traveling the path via SMIL `animateMotion` and no JavaScript.
 - Overlay `replay` trajectories on a ROS map (`map.yaml` + P2/P5 PGM) when `--map` is provided, projecting world coordinates onto the occupancy grid.
 - Re-encode the PGM map to an embedded grayscale PNG with the standard library only (no Pillow/numpy), keeping the replay a single self-contained HTML file.
+- Add an example benchmark suite under `examples/benchmark/` (three configuration reports, a six-run history, and a warehouse map) that drives reproducible public dashboards.
+- Add `scripts/build_dashboards.sh` to generate the evaluate, trend, and replay dashboards into `docs/` from the benchmark fixtures.
+- Publish live benchmark dashboards on the GitHub Pages site and regenerate them from the fixtures on every deploy.
+- Refresh the landing page to lead with the evaluation platform and link the leaderboard, trend, and replay dashboards.

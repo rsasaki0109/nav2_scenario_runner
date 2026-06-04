@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nav2 Replay</title>
+  <style>
+    :root {
+      --bg: #0f1726;
+      --panel-solid: #182338;
+      --text: #e8eef7;
+      --muted: #9aa7bd;
+      --border: #2a3850;
+      --pass: #3ad29f;
+      --fail: #ff6b6b;
+      --path: #4aa3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 70% -10%, #1d2c4a 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 64px; }
+    h1 { font-size: 30px; margin: 0; letter-spacing: -0.02em; }
+    h3 { font-size: 15px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+    .subtitle { color: var(--muted); margin: 8px 0 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-top: 18px; }
+    .card { background: var(--panel-solid); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+    .muted { color: var(--muted); }
+    .pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #24314a; color: var(--muted); }
+    .pill.pass { background: #123a2c; color: var(--pass); }
+    .pill.fail { background: #3a1620; color: var(--fail); }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 8px; display: flex; gap: 14px; flex-wrap: wrap; }
+    .meta strong { color: var(--text); }
+    svg { display: block; width: 100%; height: auto; background: #0d1524; border: 1px solid var(--border); border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Nav2 Replay</h1>
+      <p class="subtitle">3 trajectory replay(s) &middot; map 240&times;180px @ 0.05 m/px &middot; looping animation</p>
+    </header>
+    <div class="grid">
+      <div class="card">
+  <h3>straight_line <span class="pill pass">passed</span></h3>
+  <svg viewBox="0 0 240 180" role="img" aria-label="Replay of straight_line">
+  <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAC0CAAAAACP9/40AAAAz0lEQVR42u3bAQ0AMAjAMPyLfm6CkwOdgwpYhMZ3FgUMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM/As4+3h7ddABAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD14C7BAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAycAdboLnLRtxqTmDmfAAAAAElFTkSuQmCC" x="0" y="0" width="240" height="180" preserveAspectRatio="none" style="image-rendering:pixelated"/>
+  <polyline points="20.00,150.00 24.08,149.56 28.16,149.10 32.24,148.66 36.32,148.22 40.40,147.80 44.48,147.38 48.58,146.96 52.66,146.56 56.74,146.18 60.82,145.82 64.90,145.46 68.98,145.14 73.06,144.82 77.14,144.52 81.22,144.26 85.30,144.02 89.38,143.80 93.46,143.60 97.56,143.44 101.64,143.28 105.72,143.18 109.80,143.08 113.88,143.04 117.96,143.00 122.04,143.00 126.12,143.04 130.20,143.08 134.28,143.18 138.36,143.28 142.44,143.44 146.54,143.60 150.62,143.80 154.70,144.02 158.78,144.26 162.86,144.52 166.94,144.82 171.02,145.14 175.10,145.46 179.18,145.82 183.26,146.18 187.34,146.56 191.42,146.96 195.52,147.38 199.60,147.80 203.68,148.22 207.76,148.66 211.84,149.10 215.92,149.56 220.00,150.00" fill="none" stroke="#3ad29f" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  <circle cx="20.00" cy="150.00" r="2.16" fill="#3ad29f"/>
+  <circle cx="220.00" cy="150.00" r="2.16" fill="#ff6b6b"/>
+  <circle r="2.48" fill="#ffffff" stroke="#06101f" stroke-width="1.5">
+    <animateMotion path="M 20.00 150.00 L 24.08 149.56 L 28.16 149.10 L 32.24 148.66 L 36.32 148.22 L 40.40 147.80 L 44.48 147.38 L 48.58 146.96 L 52.66 146.56 L 56.74 146.18 L 60.82 145.82 L 64.90 145.46 L 68.98 145.14 L 73.06 144.82 L 77.14 144.52 L 81.22 144.26 L 85.30 144.02 L 89.38 143.80 L 93.46 143.60 L 97.56 143.44 L 101.64 143.28 L 105.72 143.18 L 109.80 143.08 L 113.88 143.04 L 117.96 143.00 L 122.04 143.00 L 126.12 143.04 L 130.20 143.08 L 134.28 143.18 L 138.36 143.28 L 142.44 143.44 L 146.54 143.60 L 150.62 143.80 L 154.70 144.02 L 158.78 144.26 L 162.86 144.52 L 166.94 144.82 L 171.02 145.14 L 175.10 145.46 L 179.18 145.82 L 183.26 146.18 L 187.34 146.56 L 191.42 146.96 L 195.52 147.38 L 199.60 147.80 L 203.68 148.22 L 207.76 148.66 L 211.84 149.10 L 215.92 149.56 L 220.00 150.00" dur="5.00s" repeatCount="indefinite" rotate="auto"/>
+  </circle>
+</svg>
+  <div class="meta"><span>Samples <strong>50</strong></span><span>Path <strong>10 m</strong></span><span>Time <strong>11.1 s</strong></span></div>
+</div>
+<div class="card">
+  <h3>narrow_corridor <span class="pill pass">passed</span></h3>
+  <svg viewBox="0 0 240 180" role="img" aria-label="Replay of narrow_corridor">
+  <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAC0CAAAAACP9/40AAAAz0lEQVR42u3bAQ0AMAjAMPyLfm6CkwOdgwpYhMZ3FgUMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM/As4+3h7ddABAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD14C7BAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAycAdboLnLRtxqTmDmfAAAAAElFTkSuQmCC" x="0" y="0" width="240" height="180" preserveAspectRatio="none" style="image-rendering:pixelated"/>
+  <polyline points="20.00,46.00 24.08,46.36 28.16,46.72 32.24,47.06 36.32,47.38 40.40,47.68 44.48,47.94 48.58,48.18 52.66,48.40 56.74,48.56 60.82,48.68 64.90,48.76 68.98,48.80 73.06,48.78 77.14,48.72 81.22,48.62 85.30,48.48 89.38,48.30 93.46,48.08 97.56,47.82 101.64,47.52 105.72,47.22 109.80,46.88 113.88,46.54 117.96,46.18 122.04,45.82 126.12,45.46 130.20,45.12 134.28,44.78 138.36,44.48 142.44,44.18 146.54,43.92 150.62,43.70 154.70,43.52 158.78,43.38 162.86,43.28 166.94,43.22 171.02,43.20 175.10,43.24 179.18,43.32 183.26,43.44 187.34,43.60 191.42,43.82 195.52,44.06 199.60,44.32 203.68,44.62 207.76,44.94 211.84,45.28 215.92,45.64 220.00,46.00" fill="none" stroke="#3ad29f" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  <circle cx="20.00" cy="46.00" r="2.16" fill="#3ad29f"/>
+  <circle cx="220.00" cy="46.00" r="2.16" fill="#ff6b6b"/>
+  <circle r="2.48" fill="#ffffff" stroke="#06101f" stroke-width="1.5">
+    <animateMotion path="M 20.00 46.00 L 24.08 46.36 L 28.16 46.72 L 32.24 47.06 L 36.32 47.38 L 40.40 47.68 L 44.48 47.94 L 48.58 48.18 L 52.66 48.40 L 56.74 48.56 L 60.82 48.68 L 64.90 48.76 L 68.98 48.80 L 73.06 48.78 L 77.14 48.72 L 81.22 48.62 L 85.30 48.48 L 89.38 48.30 L 93.46 48.08 L 97.56 47.82 L 101.64 47.52 L 105.72 47.22 L 109.80 46.88 L 113.88 46.54 L 117.96 46.18 L 122.04 45.82 L 126.12 45.46 L 130.20 45.12 L 134.28 44.78 L 138.36 44.48 L 142.44 44.18 L 146.54 43.92 L 150.62 43.70 L 154.70 43.52 L 158.78 43.38 L 162.86 43.28 L 166.94 43.22 L 171.02 43.20 L 175.10 43.24 L 179.18 43.32 L 183.26 43.44 L 187.34 43.60 L 191.42 43.82 L 195.52 44.06 L 199.60 44.32 L 203.68 44.62 L 207.76 44.94 L 211.84 45.28 L 215.92 45.64 L 220.00 46.00" dur="5.00s" repeatCount="indefinite" rotate="auto"/>
+  </circle>
+</svg>
+  <div class="meta"><span>Samples <strong>50</strong></span><span>Path <strong>19.8 m</strong></span><span>Time <strong>22 s</strong></span></div>
+</div>
+<div class="card">
+  <h3>u_turn <span class="pill pass">passed</span></h3>
+  <svg viewBox="0 0 240 180" role="img" aria-label="Replay of u_turn">
+  <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAC0CAAAAACP9/40AAAAz0lEQVR42u3bAQ0AMAjAMPyLfm6CkwOdgwpYhMZ3FgUMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM/As4+3h7ddABAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD14C7BAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAycAdboLnLRtxqTmDmfAAAAAElFTkSuQmCC" x="0" y="0" width="240" height="180" preserveAspectRatio="none" style="image-rendering:pixelated"/>
+  <polyline points="40.00,160.00 45.12,156.70 50.24,153.40 55.30,150.10 60.30,146.80 65.20,143.50 70.02,140.24 74.72,136.96 79.26,133.70 83.64,130.46 87.84,127.24 91.86,124.04 95.66,120.84 99.22,117.68 102.54,114.52 105.62,111.40 108.42,108.30 110.92,105.22 113.16,102.18 115.08,99.14 116.70,96.14 118.00,93.18 118.98,90.24 119.64,87.32 119.96,84.44 119.96,81.58 119.64,78.74 118.98,75.94 118.00,73.18 116.70,70.44 115.08,67.72 113.16,65.02 110.92,62.36 108.42,59.72 105.62,57.12 102.54,54.52 99.22,51.96 95.66,49.42 91.86,46.90 87.84,44.38 83.64,41.90 79.26,39.42 74.72,36.96 70.02,34.52 65.20,32.08 60.30,29.66 55.30,27.24 50.24,24.82 45.12,22.40 40.00,20.00" fill="none" stroke="#3ad29f" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  <circle cx="40.00" cy="160.00" r="2.16" fill="#3ad29f"/>
+  <circle cx="40.00" cy="20.00" r="2.16" fill="#ff6b6b"/>
+  <circle r="2.48" fill="#ffffff" stroke="#06101f" stroke-width="1.5">
+    <animateMotion path="M 40.00 160.00 L 45.12 156.70 L 50.24 153.40 L 55.30 150.10 L 60.30 146.80 L 65.20 143.50 L 70.02 140.24 L 74.72 136.96 L 79.26 133.70 L 83.64 130.46 L 87.84 127.24 L 91.86 124.04 L 95.66 120.84 L 99.22 117.68 L 102.54 114.52 L 105.62 111.40 L 108.42 108.30 L 110.92 105.22 L 113.16 102.18 L 115.08 99.14 L 116.70 96.14 L 118.00 93.18 L 118.98 90.24 L 119.64 87.32 L 119.96 84.44 L 119.96 81.58 L 119.64 78.74 L 118.98 75.94 L 118.00 73.18 L 116.70 70.44 L 115.08 67.72 L 113.16 65.02 L 110.92 62.36 L 108.42 59.72 L 105.62 57.12 L 102.54 54.52 L 99.22 51.96 L 95.66 49.42 L 91.86 46.90 L 87.84 44.38 L 83.64 41.90 L 79.26 39.42 L 74.72 36.96 L 70.02 34.52 L 65.20 32.08 L 60.30 29.66 L 55.30 27.24 L 50.24 24.82 L 45.12 22.40 L 40.00 20.00" dur="5.00s" repeatCount="indefinite" rotate="auto"/>
+  </circle>
+</svg>
+  <div class="meta"><span>Samples <strong>50</strong></span><span>Path <strong>16.8 m</strong></span><span>Time <strong>19.5 s</strong></span></div>
+</div>
+    </div>
+  </main>
+</body>
+</html>
