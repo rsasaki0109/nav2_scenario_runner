@@ -80,3 +80,6 @@
 - Add a public leaderboard submission flow: `scripts/build_dashboards.sh` auto-includes any run report under `examples/benchmark/submissions/`, with a contributor README, a sample submission, and a benchmark-submission issue template.
 - Add `viewer` command to render a single self-contained interactive HTML explorer (planner toggles, scenario picker, trajectory scrub/play over the map, live best-cell metric table) with the data embedded and rendered by dependency-free vanilla JS.
 - Publish the interactive explorer to the GitHub Pages benchmark gallery as the featured dashboard.
+- Add `docker/Dockerfile` (ROS 2 Jazzy + Nav2 + Gazebo + the runner) and `docker/run_benchmark.sh` to run the benchmark scenario suite against a real Nav2 stack and build dashboards from the resulting reports.
+- Add a benchmark scenario suite under `examples/benchmark/scenarios/` (`straight_line`, `narrow_corridor`, `u_turn`), linted and dry-run in tests.
+- Add the `Nav2 Real Benchmark` workflow (manual + weekly) that builds the image, runs the real benchmark, and uploads reports and dashboards as artifacts.

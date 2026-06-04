@@ -1,0 +1,58 @@
+name: Nav2 Real Benchmark
+
+# Runs the benchmark scenario suite against a REAL Nav2 + Gazebo stack inside a
+# container built from docker/Dockerfile, then uploads the dashboards and run
+# reports as artifacts. Heavy and slow, so it is manual + weekly rather than
+# per-PR (the per-PR benchmark uses the lightweight example fixtures).
+
+on:
+  workflow_dispatch:
+    inputs:
+      config-label:
+        description: "Leaderboard label for this configuration"
+        required: false
+        default: "nav2-jazzy"
+  schedule:
+    # Mondays 06:00 UTC
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build benchmark image
+        run: docker build -f docker/Dockerfile -t nav2-scenario-runner:jazzy-gazebo .
+
+      - name: Run real Nav2 benchmark
+        run: |
+          mkdir -p out
+          docker run --rm \
+            -e CONFIG_LABEL="${{ github.event.inputs.config-label || 'nav2-jazzy' }}" \
+            -e RUN_LABEL="${{ github.sha }}" \
+            -v "$PWD/out:/out" \
+            nav2-scenario-runner:jazzy-gazebo \
+            "bash docker/run_benchmark.sh /out"
+
+      - name: Summarize
+        if: always()
+        run: |
+          echo "## Nav2 Real Benchmark" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f out/reports/results.json ]; then
+            python3 -c "import json;d=json.load(open('out/reports/results.json'));print(f'- {d[\"passed\"]}/{d[\"total\"]} scenarios passed')" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- No report produced (see logs)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nav2-real-benchmark
+          path: out/
+          if-no-files-found: warn
