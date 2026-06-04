@@ -1,0 +1,68 @@
+apiVersion: nav2.scenario/v1alpha1
+kind: Scenario
+
+metadata:
+  name: narrow_corridor
+  description: Navigate through a constrained corridor to a goal across the room.
+  tags: [benchmark, navigation, diff_drive]
+  owner: navigation-team
+
+runtime:
+  timeout: 120
+  use_sim_time: true
+  seed: 42
+  isolation:
+    ros_domain_id: auto
+
+simulator:
+  type: gazebo_sim
+  headless: true
+  world: worlds/tb3_world.sdf
+  launch:
+    package: nav2_minimal_tb3_sim
+    file: simulation.launch.py
+
+robot:
+  profile: turtlebot3_waffle
+  initial_pose:
+    x: -2.0
+    y: -0.5
+    yaw: 0.0
+
+nav2:
+  bringup:
+    package: nav2_bringup
+    file: bringup_launch.py
+  params: config/nav2_params.yaml
+  map: maps/warehouse.yaml
+  autostart: true
+
+steps:
+  - wait_for_nav2_active:
+      timeout: 30
+
+  - set_initial_pose:
+      x: -2.0
+      y: -0.5
+      yaw: 0.0
+
+  - send_goal:
+      name: across
+      pose:
+        x: 2.0
+        y: 1.5
+        yaw: 1.57
+
+  - expect_goal_reached:
+      goal: across
+      timeout: 90
+
+assertions:
+  - collision_free: {}
+  - goal_reached: {}
+  - travel_time:
+      max: 60.0
+  - path_length:
+      max: 9.0
+  - recovery_count:
+      max: 2
