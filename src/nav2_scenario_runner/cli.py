@@ -333,6 +333,41 @@ def build_parser() -> argparse.ArgumentParser:
         help="Append the Markdown trend summary to the GITHUB_STEP_SUMMARY file.",
     )
 
+    pr_comment_parser = subparsers.add_parser(
+        "pr-comment",
+        help="Render a compact PR benchmark comment from evaluate/trend JSON.",
+    )
+    pr_comment_parser.add_argument(
+        "--evaluation",
+        type=Path,
+        required=True,
+        metavar="EVALUATION.json",
+        help="Leaderboard JSON produced by 'evaluate --json-output'.",
+    )
+    pr_comment_parser.add_argument(
+        "--trend",
+        type=Path,
+        default=None,
+        metavar="TREND.json",
+        help="Optional trend JSON produced by 'trend --json-output' for a regression section.",
+    )
+    pr_comment_parser.add_argument(
+        "--title",
+        default="Nav2 Benchmark",
+        help="Heading shown at the top of the comment.",
+    )
+    pr_comment_parser.add_argument(
+        "--dashboard-url",
+        default=None,
+        help="Optional URL to a full HTML dashboard, linked in the footer.",
+    )
+    pr_comment_parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Write the Markdown comment to this path (also printed to stdout).",
+    )
+
     compare_parser = subparsers.add_parser("compare", help="Compare current JSON report against a baseline.")
     compare_parser.add_argument("current", type=Path, help="Current JSON report path.")
     compare_parser.add_argument("--baseline", type=Path, required=True, help="Baseline JSON report path.")
@@ -413,6 +448,15 @@ def main(argv: list[str] | None = None) -> int:
             markdown_output=args.markdown_output,
             json_output=args.json_output,
             github_summary=args.github_summary,
+        )
+
+    if args.command == "pr-comment":
+        return _cmd_pr_comment(
+            evaluation_path=args.evaluation,
+            trend_path=args.trend,
+            title=args.title,
+            dashboard_url=args.dashboard_url,
+            output_path=args.output,
         )
 
     if args.command == "compare":
@@ -663,6 +707,40 @@ def _cmd_evaluate(
         append_text_report(format_evaluation_markdown(evaluation), github_summary_path)
         print(f"Evaluation GitHub summary: {github_summary_path}")
 
+    return 0
+
+
+def _cmd_pr_comment(
+    evaluation_path: Path,
+    trend_path: Path | None,
+    title: str,
+    dashboard_url: str | None,
+    output_path: Path | None,
+) -> int:
+    import json
+
+    from .pr_comment import build_comment
+
+    try:
+        evaluation = json.loads(evaluation_path.read_text(encoding="utf-8"))
+        trend = (
+            json.loads(trend_path.read_text(encoding="utf-8")) if trend_path else None
+        )
+        body = build_comment(
+            evaluation,
+            trend,
+            title=title,
+            dashboard_url=dashboard_url,
+        )
+    except (OSError, ValueError) as exc:
+        print(f"PR comment failed: {exc}", file=sys.stderr)
+        return 2
+
+    if output_path:
+        write_text_report(body, output_path)
+        print(f"PR comment: {output_path}")
+    else:
+        print(body, end="")
     return 0
 
 
