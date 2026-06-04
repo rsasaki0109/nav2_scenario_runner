@@ -11,30 +11,39 @@
   "leaderboard": [
     {
       "rank": 1,
+      "label": "community-dwb",
+      "score": 85.09,
+      "pass_rate": 1.0,
+      "passed": 3,
+      "total": 3,
+      "wins": 9
+    },
+    {
+      "rank": 2,
+      "label": "smac",
+      "score": 72.59,
+      "pass_rate": 1.0,
+      "passed": 3,
+      "total": 3,
+      "wins": 10
+    },
+    {
+      "rank": 3,
       "label": "navfn",
-      "score": 73.75,
+      "score": 72.18,
       "pass_rate": 1.0,
       "passed": 3,
       "total": 3,
       "wins": 5
     },
     {
-      "rank": 2,
-      "label": "smac",
-      "score": 73.33,
-      "pass_rate": 1.0,
-      "passed": 3,
-      "total": 3,
-      "wins": 11
-    },
-    {
-      "rank": 3,
+      "rank": 4,
       "label": "teb",
-      "score": 46.67,
+      "score": 45.0,
       "pass_rate": 0.6667,
       "passed": 2,
       "total": 3,
-      "wins": 7
+      "wins": 6
     }
   ]
 }

@@ -76,3 +76,5 @@
 - Add `pr-comment` command to render a compact, sticky benchmark comment (medal leaderboard plus a regression section) from `evaluate`/`trend` JSON, carrying an HTML marker for in-place upsert.
 - Add a bundled composite GitHub Action (`action.yml`, "Nav2 Benchmark") that ranks Nav2 configs and emits a PR-ready comment, exposing `comment-file`, `evaluation-file`, and `winner` outputs.
 - Dogfood the action via `.github/workflows/benchmark-pr.yml`, which posts a self-updating benchmark comment on pull requests from the example suite.
+- Add `badge` command to emit shields.io endpoint JSON (`winner`, `score`, `passrate`, `regressions`) from evaluate/trend JSON, and publish self-updating README badges from GitHub Pages.
+- Add a public leaderboard submission flow: `scripts/build_dashboards.sh` auto-includes any run report under `examples/benchmark/submissions/`, with a contributor README, a sample submission, and a benchmark-submission issue template.
