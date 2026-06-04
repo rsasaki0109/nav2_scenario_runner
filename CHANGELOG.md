@@ -78,3 +78,5 @@
 - Dogfood the action via `.github/workflows/benchmark-pr.yml`, which posts a self-updating benchmark comment on pull requests from the example suite.
 - Add `badge` command to emit shields.io endpoint JSON (`winner`, `score`, `passrate`, `regressions`) from evaluate/trend JSON, and publish self-updating README badges from GitHub Pages.
 - Add a public leaderboard submission flow: `scripts/build_dashboards.sh` auto-includes any run report under `examples/benchmark/submissions/`, with a contributor README, a sample submission, and a benchmark-submission issue template.
+- Add `viewer` command to render a single self-contained interactive HTML explorer (planner toggles, scenario picker, trajectory scrub/play over the map, live best-cell metric table) with the data embedded and rendered by dependency-free vanilla JS.
+- Publish the interactive explorer to the GitHub Pages benchmark gallery as the featured dashboard.
