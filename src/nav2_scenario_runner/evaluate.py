@@ -129,9 +129,10 @@ def parse_entry(raw: str) -> tuple[str, Path]:
     return label, Path(path)
 
 
-def load_entries(entries: list[tuple[str, Path]]) -> list[ConfigEntry]:
-    if len(entries) < 2:
-        raise ValueError("evaluate needs at least two --entry configurations to compare.")
+def load_entries(entries: list[tuple[str, Path]], minimum: int = 2) -> list[ConfigEntry]:
+    if len(entries) < minimum:
+        count = "two" if minimum == 2 else str(minimum)
+        raise ValueError(f"evaluate needs at least {count} --entry configurations to compare.")
     seen: set[str] = set()
     loaded: list[ConfigEntry] = []
     for label, path in entries:
