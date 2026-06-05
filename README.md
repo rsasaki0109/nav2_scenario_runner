@@ -295,6 +295,13 @@ request (or the [benchmark submission issue](.github/ISSUE_TEMPLATE/benchmark-su
 appears on the [live dashboard](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
 on the next deploy.
 
+Every submission PR is auto-reviewed: the
+[`Validate submissions`](.github/workflows/validate-submissions.yml) workflow
+runs `validate-submission` to check the label, core-scenario coverage, and
+in-bounds trajectories, then upserts a sticky comment that **previews where your
+configuration would rank** — instant feedback before a maintainer even looks. See
+[docs/submission-review.md](docs/submission-review.md).
+
 Real Nav2 numbers from a reproducible container (Docker + Gazebo):
 
 ```bash
