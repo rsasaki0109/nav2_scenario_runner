@@ -295,6 +295,22 @@ request (or the [benchmark submission issue](.github/ISSUE_TEMPLATE/benchmark-su
 appears on the [live dashboard](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
 on the next deploy.
 
+Real Nav2 numbers from a reproducible container (Docker + Gazebo):
+
+```bash
+docker build -f docker/Dockerfile -t nav2-scenario-runner:jazzy-gazebo .
+docker run --rm -v "$PWD/out:/out" nav2-scenario-runner:jazzy-gazebo \
+  "bash docker/run_benchmark.sh /out"
+```
+
+The image pins ROS 2 Jazzy + Nav2 + Gazebo on Nav2's demo robot and runs the
+[benchmark scenario suite](examples/benchmark/scenarios/) (`straight_line`,
+`narrow_corridor`, `u_turn`) under the full `gazebo-sim` execution ladder. The
+run report shares the benchmark schema, so it feeds `evaluate`/`trend`/`viewer`
+directly. The [`Nav2 Real Benchmark`](.github/workflows/nav2-benchmark.yml)
+workflow runs it weekly/on-demand and uploads the dashboards. See
+[docs/nav2-benchmark-ci.md](docs/nav2-benchmark-ci.md).
+
 `--mode attach` currently supports:
 
 - `wait_for_nav2_active`
@@ -427,6 +443,7 @@ docs/
   replay.md
   viewer.md
   pr-benchmark-bot.md
+  nav2-benchmark-ci.md
   simulator-adapters.md
   ci.md
   plugin-authoring.md
