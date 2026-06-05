@@ -15,6 +15,14 @@ from .compare import (
     write_compare_report,
 )
 from .doctor import run_doctor, write_doctor_report
+from .evaluate import (
+    MetricDirections,
+    build_evaluation,
+    format_evaluation_html,
+    format_evaluation_markdown,
+    load_entries,
+    parse_entry,
+)
 from .execution import BackendUnavailable
 from .init_project import InitError, available_templates, init_project
 from .report_view import (
@@ -223,6 +231,41 @@ def build_parser() -> argparse.ArgumentParser:
         help="Return non-zero if the report contains failed scenarios.",
     )
 
+    evaluate_parser = subparsers.add_parser(
+        "evaluate",
+        help="Rank multiple Nav2 configurations across a scenario suite into a leaderboard dashboard.",
+    )
+    evaluate_parser.add_argument(
+        "--entry",
+        action="append",
+        default=[],
+        metavar="LABEL=REPORT.json",
+        required=True,
+        help="A named configuration and its JSON run report. Repeat for each configuration (min 2).",
+    )
+    evaluate_parser.add_argument(
+        "--lower-is-better",
+        action="append",
+        default=[],
+        metavar="METRIC",
+        help="Treat this metric as better when smaller, overriding defaults. Can be repeated.",
+    )
+    evaluate_parser.add_argument(
+        "--higher-is-better",
+        action="append",
+        default=[],
+        metavar="METRIC",
+        help="Treat this metric as better when larger, overriding defaults. Can be repeated.",
+    )
+    evaluate_parser.add_argument("--html-output", type=Path, default=None, help="Optional HTML dashboard path.")
+    evaluate_parser.add_argument("--markdown-output", type=Path, default=None, help="Optional Markdown summary path.")
+    evaluate_parser.add_argument("--json-output", type=Path, default=None, help="Optional machine-readable leaderboard JSON path.")
+    evaluate_parser.add_argument(
+        "--github-summary",
+        action="store_true",
+        help="Append the Markdown leaderboard to the GITHUB_STEP_SUMMARY file.",
+    )
+
     compare_parser = subparsers.add_parser("compare", help="Compare current JSON report against a baseline.")
     compare_parser.add_argument("current", type=Path, help="Current JSON report path.")
     compare_parser.add_argument("--baseline", type=Path, required=True, help="Baseline JSON report path.")
@@ -271,6 +314,17 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             args.github_summary,
             args.fail_on_failure,
+        )
+
+    if args.command == "evaluate":
+        return _cmd_evaluate(
+            entries=args.entry,
+            lower_is_better=args.lower_is_better,
+            higher_is_better=args.higher_is_better,
+            html_output=args.html_output,
+            markdown_output=args.markdown_output,
+            json_output=args.json_output,
+            github_summary=args.github_summary,
         )
 
     if args.command == "compare":
@@ -363,6 +417,70 @@ def _cmd_doctor(check_ros: bool, check_gazebo: bool, check_ros_graph: bool, json
         print(f"Doctor report: {json_path}")
 
     return 0 if report.passed else 1
+
+
+def _cmd_evaluate(
+    entries: list[str],
+    lower_is_better: list[str],
+    higher_is_better: list[str],
+    html_output: Path | None,
+    markdown_output: Path | None,
+    json_output: Path | None,
+    github_summary: bool,
+) -> int:
+    import json
+
+    from .evaluate import evaluation_to_dict
+
+    try:
+        parsed_entries = [parse_entry(raw) for raw in entries]
+        loaded = load_entries(parsed_entries)
+    except ValueError as exc:
+        print(f"Evaluate failed: {exc}", file=sys.stderr)
+        return 2
+
+    directions = MetricDirections()
+    for metric in lower_is_better:
+        directions.lower_is_better.add(metric)
+        directions.higher_is_better.discard(metric)
+    for metric in higher_is_better:
+        directions.higher_is_better.add(metric)
+        directions.lower_is_better.discard(metric)
+
+    evaluation = build_evaluation(loaded, directions)
+
+    print(f"Evaluate: {len(evaluation.configs)} configurations, {len(evaluation.scenario_ids)} scenarios")
+    for config in evaluation.configs:
+        print(
+            f"  {config.rank}. {config.label} "
+            f"score={config.composite * 100:.1f} "
+            f"pass={config.pass_rate * 100:.0f}% ({config.passed}/{config.total}) "
+            f"wins={config.wins}"
+        )
+
+    if html_output:
+        write_text_report(format_evaluation_html(evaluation), html_output)
+        print(f"Evaluation HTML: {html_output}")
+
+    if markdown_output:
+        write_text_report(format_evaluation_markdown(evaluation), markdown_output)
+        print(f"Evaluation Markdown: {markdown_output}")
+
+    if json_output:
+        json_output.parent.mkdir(parents=True, exist_ok=True)
+        json_output.write_text(json.dumps(evaluation_to_dict(evaluation), indent=2) + "\n", encoding="utf-8")
+        print(f"Evaluation JSON: {json_output}")
+
+    if github_summary:
+        try:
+            github_summary_path = _github_summary_path()
+        except ValueError as exc:
+            print(f"Evaluate GitHub summary failed: {exc}", file=sys.stderr)
+            return 2
+        append_text_report(format_evaluation_markdown(evaluation), github_summary_path)
+        print(f"Evaluation GitHub summary: {github_summary_path}")
+
+    return 0
 
 
 def _cmd_compare(
