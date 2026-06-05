@@ -76,3 +76,42 @@ def test_benchmark_trajectories_fit_the_map_bounds():
                 x, y = map_image.project(point["x"], point["y"])
                 assert -1.0 <= x <= map_image.width + 1.0, f"{label}/{scenario.scenario_id} x out of bounds"
                 assert -1.0 <= y <= map_image.height + 1.0, f"{label}/{scenario.scenario_id} y out of bounds"
+
+
+SUBMISSIONS = sorted((BENCH / "submissions").glob("*.json"))
+CORE_SCENARIO_IDS = {"straight_line", "narrow_corridor", "u_turn"}
+
+
+@pytest.mark.parametrize("submission", SUBMISSIONS, ids=lambda p: p.stem)
+def test_community_submissions_are_valid(submission: Path):
+    """Each merged submission must load and cover the core scenario ids.
+
+    Submissions are auto-included on the public leaderboard, so a malformed one
+    would break the deployed dashboard. This guards every file under
+    submissions/ at once.
+    """
+
+    report = json.loads(submission.read_text(encoding="utf-8"))
+    ids = {scenario["scenario_id"] for scenario in report["scenarios"]}
+    assert CORE_SCENARIO_IDS <= ids, f"{submission.name} is missing core scenarios"
+
+    map_image = load_map(BENCH / "maps" / "warehouse.yaml")
+    for scenario in load_replay_scenarios(report):
+        for point in scenario.points:
+            x, y = map_image.project(point["x"], point["y"])
+            assert -1.0 <= x <= map_image.width + 1.0, f"{submission.name} x out of bounds"
+            assert -1.0 <= y <= map_image.height + 1.0, f"{submission.name} y out of bounds"
+
+
+def test_evaluate_includes_submissions_on_leaderboard():
+    labels = list(CONFIG_LABELS) + [p.stem for p in SUBMISSIONS]
+    evaluation = build_evaluation([_load_any(label) for label in labels])
+    assert {config.label for config in evaluation.configs} == set(labels)
+
+
+def _load_any(label: str) -> ConfigEntry:
+    for base in (BENCH, BENCH / "submissions"):
+        path = base / f"{label}.json"
+        if path.is_file():
+            return ConfigEntry(label=label, path=str(path), report=json.loads(path.read_text(encoding="utf-8")))
+    raise AssertionError(f"no report found for {label}")

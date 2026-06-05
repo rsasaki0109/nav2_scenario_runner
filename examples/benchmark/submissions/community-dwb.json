@@ -1,0 +1,231 @@
+{
+  "runner_version": "0.1.0",
+  "generated_at": "2026-06-05T00:00:00+00:00",
+  "mode": "attach",
+  "total": 3,
+  "passed": 3,
+  "failed": 0,
+  "scenarios": [
+    {
+      "scenario_id": "straight_line",
+      "name": "straight_line",
+      "path": "scenarios/straight_line.yaml",
+      "status": "passed",
+      "metrics": {
+        "travel_time": 11.8,
+        "path_length_traveled": 10.1,
+        "recovery_count": 0,
+        "replanning_count": 2,
+        "collision_free": true,
+        "trajectory": [
+          {
+            "x": -5.0,
+            "y": 0.0
+          },
+          {
+            "x": -4.231,
+            "y": 0.0
+          },
+          {
+            "x": -3.462,
+            "y": 0.0
+          },
+          {
+            "x": -2.692,
+            "y": 0.0
+          },
+          {
+            "x": -1.923,
+            "y": 0.0
+          },
+          {
+            "x": -1.154,
+            "y": 0.0
+          },
+          {
+            "x": -0.385,
+            "y": 0.0
+          },
+          {
+            "x": 0.385,
+            "y": 0.0
+          },
+          {
+            "x": 1.154,
+            "y": 0.0
+          },
+          {
+            "x": 1.923,
+            "y": 0.0
+          },
+          {
+            "x": 2.692,
+            "y": 0.0
+          },
+          {
+            "x": 3.462,
+            "y": 0.0
+          },
+          {
+            "x": 4.231,
+            "y": 0.0
+          },
+          {
+            "x": 5.0,
+            "y": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "scenario_id": "narrow_corridor",
+      "name": "narrow_corridor",
+      "path": "scenarios/narrow_corridor.yaml",
+      "status": "passed",
+      "metrics": {
+        "travel_time": 23.6,
+        "path_length_traveled": 21.3,
+        "recovery_count": 1,
+        "replanning_count": 5,
+        "collision_free": true,
+        "trajectory": [
+          {
+            "x": -5.0,
+            "y": -2.0
+          },
+          {
+            "x": -4.269,
+            "y": -1.654
+          },
+          {
+            "x": -3.538,
+            "y": -1.308
+          },
+          {
+            "x": -2.808,
+            "y": -0.962
+          },
+          {
+            "x": -2.077,
+            "y": -0.615
+          },
+          {
+            "x": -1.346,
+            "y": -0.269
+          },
+          {
+            "x": -0.615,
+            "y": 0.077
+          },
+          {
+            "x": 0.115,
+            "y": 0.423
+          },
+          {
+            "x": 0.846,
+            "y": 0.769
+          },
+          {
+            "x": 1.577,
+            "y": 1.115
+          },
+          {
+            "x": 2.308,
+            "y": 1.462
+          },
+          {
+            "x": 3.038,
+            "y": 1.808
+          },
+          {
+            "x": 3.769,
+            "y": 2.154
+          },
+          {
+            "x": 4.5,
+            "y": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "scenario_id": "u_turn",
+      "name": "u_turn",
+      "path": "scenarios/u_turn.yaml",
+      "status": "passed",
+      "metrics": {
+        "travel_time": 18.4,
+        "path_length_traveled": 16.0,
+        "recovery_count": 1,
+        "replanning_count": 3,
+        "collision_free": true,
+        "trajectory": [
+          {
+            "x": -3.0,
+            "y": 0.0
+          },
+          {
+            "x": -2.934,
+            "y": 0.624
+          },
+          {
+            "x": -2.741,
+            "y": 1.22
+          },
+          {
+            "x": -2.427,
+            "y": 1.763
+          },
+          {
+            "x": -2.007,
+            "y": 2.229
+          },
+          {
+            "x": -1.5,
+            "y": 2.598
+          },
+          {
+            "x": -0.927,
+            "y": 2.853
+          },
+          {
+            "x": -0.314,
+            "y": 2.984
+          },
+          {
+            "x": 0.314,
+            "y": 2.984
+          },
+          {
+            "x": 0.927,
+            "y": 2.853
+          },
+          {
+            "x": 1.5,
+            "y": 2.598
+          },
+          {
+            "x": 2.007,
+            "y": 2.229
+          },
+          {
+            "x": 2.427,
+            "y": 1.763
+          },
+          {
+            "x": 2.741,
+            "y": 1.22
+          },
+          {
+            "x": 2.934,
+            "y": 0.624
+          },
+          {
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      }
+    }
+  ]
+}
