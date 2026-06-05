@@ -160,6 +160,27 @@ normalizes each metric per scenario (with `--lower-is-better` / `--higher-is-bet
 overrides), and ranks by pass rate, then composite score, then metric wins. See
 [docs/evaluation.md](docs/evaluation.md).
 
+Trend tracking over time (record runs, then visualize drift):
+
+```bash
+nav2_scenario_runner record reports/results.json \
+  --history reports/history.jsonl \
+  --label "$(git rev-parse --short HEAD)"
+
+nav2_scenario_runner trend reports/history.jsonl \
+  --html-output reports/trend.html \
+  --markdown-output reports/trend.md \
+  --json-output reports/trend.json \
+  --github-summary
+```
+
+`record` appends each run to an append-only JSONL history store keyed by a label
+(typically a commit SHA), keeping scalar metrics only. `trend` renders that
+history as a dashboard: a suite pass-rate line and per-scenario metric line
+charts, plus Markdown with direction-aware latest-vs-previous deltas. This lets
+CI catch a slow navigation regression that no single run would fail. See
+[docs/trend.md](docs/trend.md).
+
 `--mode attach` currently supports:
 
 - `wait_for_nav2_active`
@@ -288,6 +309,7 @@ docs/
   scenario-dsl.md
   metrics.md
   evaluation.md
+  trend.md
   simulator-adapters.md
   ci.md
   plugin-authoring.md
