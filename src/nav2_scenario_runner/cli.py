@@ -24,6 +24,15 @@ from .evaluate import (
     parse_entry,
 )
 from .execution import BackendUnavailable
+from .history import (
+    append_history,
+    build_trend,
+    format_trend_html,
+    format_trend_markdown,
+    load_history,
+    summarize_report,
+    trend_to_dict,
+)
 from .init_project import InitError, available_templates, init_project
 from .report_view import (
     append_text_report,
@@ -266,6 +275,37 @@ def build_parser() -> argparse.ArgumentParser:
         help="Append the Markdown leaderboard to the GITHUB_STEP_SUMMARY file.",
     )
 
+    record_parser = subparsers.add_parser(
+        "record",
+        help="Append a JSON run report to an append-only history store for trend tracking.",
+    )
+    record_parser.add_argument("report", type=Path, help="JSON run report path.")
+    record_parser.add_argument("--history", type=Path, required=True, help="History JSONL store to append to.")
+    record_parser.add_argument(
+        "--label",
+        default=None,
+        help="Run label, typically a commit SHA. Defaults to the report's generated_at.",
+    )
+    record_parser.add_argument(
+        "--timestamp",
+        default=None,
+        help="Override the recorded timestamp. Defaults to the report's generated_at.",
+    )
+
+    trend_parser = subparsers.add_parser(
+        "trend",
+        help="Render a history store as a metric trend dashboard.",
+    )
+    trend_parser.add_argument("history", type=Path, help="History JSONL store path.")
+    trend_parser.add_argument("--html-output", type=Path, default=None, help="Optional HTML trend dashboard path.")
+    trend_parser.add_argument("--markdown-output", type=Path, default=None, help="Optional Markdown trend summary path.")
+    trend_parser.add_argument("--json-output", type=Path, default=None, help="Optional machine-readable trend JSON path.")
+    trend_parser.add_argument(
+        "--github-summary",
+        action="store_true",
+        help="Append the Markdown trend summary to the GITHUB_STEP_SUMMARY file.",
+    )
+
     compare_parser = subparsers.add_parser("compare", help="Compare current JSON report against a baseline.")
     compare_parser.add_argument("current", type=Path, help="Current JSON report path.")
     compare_parser.add_argument("--baseline", type=Path, required=True, help="Baseline JSON report path.")
@@ -314,6 +354,18 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             args.github_summary,
             args.fail_on_failure,
+        )
+
+    if args.command == "record":
+        return _cmd_record(args.report, args.history, args.label, args.timestamp)
+
+    if args.command == "trend":
+        return _cmd_trend(
+            history_path=args.history,
+            html_output=args.html_output,
+            markdown_output=args.markdown_output,
+            json_output=args.json_output,
+            github_summary=args.github_summary,
         )
 
     if args.command == "evaluate":
@@ -417,6 +469,77 @@ def _cmd_doctor(check_ros: bool, check_gazebo: bool, check_ros_graph: bool, json
         print(f"Doctor report: {json_path}")
 
     return 0 if report.passed else 1
+
+
+def _cmd_record(
+    report_path: Path,
+    history_path: Path,
+    label: str | None,
+    timestamp: str | None,
+) -> int:
+    try:
+        report = load_run_report(report_path)
+        resolved_label = label or str(report.get("generated_at") or "")
+        if not resolved_label:
+            print("Record failed: no --label provided and report has no generated_at.", file=sys.stderr)
+            return 2
+        entry = summarize_report(report, label=resolved_label, timestamp=timestamp)
+        append_history(history_path, entry)
+    except ValueError as exc:
+        print(f"Record failed: {exc}", file=sys.stderr)
+        return 2
+
+    print(
+        f"Recorded {resolved_label} to {history_path}: "
+        f"{entry.passed}/{entry.total} passed across {len(entry.scenarios)} scenario(s)"
+    )
+    return 0
+
+
+def _cmd_trend(
+    history_path: Path,
+    html_output: Path | None,
+    markdown_output: Path | None,
+    json_output: Path | None,
+    github_summary: bool,
+) -> int:
+    import json
+
+    try:
+        entries = load_history(history_path)
+        trend = build_trend(entries)
+    except ValueError as exc:
+        print(f"Trend failed: {exc}", file=sys.stderr)
+        return 2
+
+    print(
+        f"Trend: {len(trend.labels)} run(s), latest {trend.labels[-1]} "
+        f"pass={trend.pass_rates[-1] * 100:.0f}%, {len(trend.metrics)} metric(s)"
+    )
+
+    if html_output:
+        write_text_report(format_trend_html(trend), html_output)
+        print(f"Trend HTML: {html_output}")
+
+    if markdown_output:
+        write_text_report(format_trend_markdown(trend), markdown_output)
+        print(f"Trend Markdown: {markdown_output}")
+
+    if json_output:
+        json_output.parent.mkdir(parents=True, exist_ok=True)
+        json_output.write_text(json.dumps(trend_to_dict(trend), indent=2) + "\n", encoding="utf-8")
+        print(f"Trend JSON: {json_output}")
+
+    if github_summary:
+        try:
+            github_summary_path = _github_summary_path()
+        except ValueError as exc:
+            print(f"Trend GitHub summary failed: {exc}", file=sys.stderr)
+            return 2
+        append_text_report(format_trend_markdown(trend), github_summary_path)
+        print(f"Trend GitHub summary: {github_summary_path}")
+
+    return 0
 
 
 def _cmd_evaluate(
