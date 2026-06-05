@@ -23,6 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build benchmark dashboards
+        run: |
+          python3 -m pip install --quiet -e .
+          bash scripts/build_dashboards.sh
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
