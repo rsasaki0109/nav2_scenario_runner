@@ -369,6 +369,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the Markdown comment to this path (also printed to stdout).",
     )
 
+    viewer_parser = subparsers.add_parser(
+        "viewer",
+        help="Render a self-contained interactive HTML benchmark explorer.",
+    )
+    viewer_parser.add_argument(
+        "--entry",
+        action="append",
+        default=[],
+        metavar="LABEL=REPORT.json",
+        required=True,
+        help="A named configuration and its JSON run report. Repeat for each configuration.",
+    )
+    viewer_parser.add_argument(
+        "--map",
+        dest="map_yaml",
+        type=Path,
+        default=None,
+        help="ROS map YAML (with an image: PGM) to draw under the trajectories.",
+    )
+    viewer_parser.add_argument("--html-output", type=Path, required=True, help="HTML viewer output path.")
+    viewer_parser.add_argument("--title", default="Nav2 Benchmark Explorer", help="Page title/heading.")
+
     badge_parser = subparsers.add_parser(
         "badge",
         help="Emit a shields.io endpoint badge JSON from evaluate/trend JSON.",
@@ -489,6 +511,14 @@ def main(argv: list[str] | None = None) -> int:
             title=args.title,
             dashboard_url=args.dashboard_url,
             output_path=args.output,
+        )
+
+    if args.command == "viewer":
+        return _cmd_viewer(
+            entries=args.entry,
+            map_yaml=args.map_yaml,
+            html_output=args.html_output,
+            title=args.title,
         )
 
     if args.command == "badge":
@@ -781,6 +811,28 @@ def _cmd_pr_comment(
         print(f"PR comment: {output_path}")
     else:
         print(body, end="")
+    return 0
+
+
+def _cmd_viewer(
+    entries: list[str],
+    map_yaml: Path | None,
+    html_output: Path,
+    title: str,
+) -> int:
+    from .viewer import build_viewer_data, format_viewer_html
+
+    try:
+        parsed_entries = [parse_entry(raw) for raw in entries]
+        loaded = load_entries(parsed_entries, minimum=1)
+        map_image = load_map(map_yaml) if map_yaml else None
+        data = build_viewer_data(loaded, map_image)
+    except ValueError as exc:
+        print(f"Viewer failed: {exc}", file=sys.stderr)
+        return 2
+
+    write_text_report(format_viewer_html(data, title), html_output)
+    print(f"Viewer HTML: {html_output} ({len(loaded)} config(s), {len(data['scenario_ids'])} scenario(s))")
     return 0
 
 
