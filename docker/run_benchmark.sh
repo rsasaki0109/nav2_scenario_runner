@@ -56,8 +56,9 @@ nav2_scenario_runner run examples/benchmark/scenarios/ \
   --collect-contacts \
   --report-dir "$OUT/reports" \
   --json-report "results.json" \
-  --html-report "run.html" \
-  --github-summary || RUN_RC=$?
+  --html-report "run.html" || RUN_RC=$?
+# (No --github-summary: GITHUB_STEP_SUMMARY isn't visible inside the container;
+#  the workflow's Summarize step writes the run summary on the host instead.)
 
 if [ "$RUN_RC" -ne 0 ]; then
   echo "== Benchmark run exited with code $RUN_RC (some scenarios may have failed) =="
