@@ -41,6 +41,7 @@ from .report_view import (
     report_has_failures,
     write_text_report,
 )
+from .replay import format_replay_html, load_map, load_replay_scenarios
 from .reporting import write_json_report, write_junit_report, write_trace_report
 from .runner import dry_run, run_with_backend_factory
 from .scenario import discover_scenarios, load_scenario
@@ -275,6 +276,32 @@ def build_parser() -> argparse.ArgumentParser:
         help="Append the Markdown leaderboard to the GITHUB_STEP_SUMMARY file.",
     )
 
+    replay_parser = subparsers.add_parser(
+        "replay",
+        help="Render an animated trajectory replay from a run report, optionally over a ROS map.",
+    )
+    replay_parser.add_argument("report", type=Path, help="JSON run report path.")
+    replay_parser.add_argument("--html-output", type=Path, required=True, help="HTML replay output path.")
+    replay_parser.add_argument(
+        "--scenario",
+        action="append",
+        default=[],
+        help="Only replay this scenario id. Can be repeated. Defaults to all with trajectories.",
+    )
+    replay_parser.add_argument(
+        "--map",
+        dest="map_yaml",
+        type=Path,
+        default=None,
+        help="ROS map YAML (with an image: PGM) to draw under the trajectory.",
+    )
+    replay_parser.add_argument(
+        "--duration",
+        type=float,
+        default=4.0,
+        help="Seconds for one loop of the replay animation.",
+    )
+
     record_parser = subparsers.add_parser(
         "record",
         help="Append a JSON run report to an append-only history store for trend tracking.",
@@ -354,6 +381,15 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             args.github_summary,
             args.fail_on_failure,
+        )
+
+    if args.command == "replay":
+        return _cmd_replay(
+            report_path=args.report,
+            html_output=args.html_output,
+            scenarios=set(args.scenario),
+            map_yaml=args.map_yaml,
+            duration=args.duration,
         )
 
     if args.command == "record":
@@ -469,6 +505,30 @@ def _cmd_doctor(check_ros: bool, check_gazebo: bool, check_ros_graph: bool, json
         print(f"Doctor report: {json_path}")
 
     return 0 if report.passed else 1
+
+
+def _cmd_replay(
+    report_path: Path,
+    html_output: Path,
+    scenarios: set[str],
+    map_yaml: Path | None,
+    duration: float,
+) -> int:
+    try:
+        report = load_run_report(report_path)
+        replay_scenarios = load_replay_scenarios(report, only=scenarios or None)
+        map_image = load_map(map_yaml) if map_yaml else None
+    except ValueError as exc:
+        print(f"Replay failed: {exc}", file=sys.stderr)
+        return 2
+
+    if not replay_scenarios:
+        print("Replay failed: no scenarios with trajectories to replay.", file=sys.stderr)
+        return 1
+
+    write_text_report(format_replay_html(replay_scenarios, map_image, duration), html_output)
+    print(f"Replay HTML: {html_output} ({len(replay_scenarios)} scenario(s))")
+    return 0
 
 
 def _cmd_record(

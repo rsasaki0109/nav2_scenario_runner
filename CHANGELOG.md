@@ -66,3 +66,6 @@
 - Add `record` command to append a run report to an append-only JSONL history store keyed by a run label such as a commit SHA.
 - Add `trend` command to render a metric trend dashboard from a history store, with a pass-rate line and per-scenario metric line charts.
 - Render `trend` Markdown with latest-vs-previous deltas and direction-aware better/worse markers, plus machine-readable trend JSON and `--github-summary` support.
+- Add `replay` command to render an animated SVG trajectory replay from a run report, with the robot marker traveling the path via SMIL `animateMotion` and no JavaScript.
+- Overlay `replay` trajectories on a ROS map (`map.yaml` + P2/P5 PGM) when `--map` is provided, projecting world coordinates onto the occupancy grid.
+- Re-encode the PGM map to an embedded grayscale PNG with the standard library only (no Pillow/numpy), keeping the replay a single self-contained HTML file.
