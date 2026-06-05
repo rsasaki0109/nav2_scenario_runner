@@ -139,6 +139,27 @@ nav2_scenario_runner compare reports/current.json \
 
 The compare command always checks status regressions. Numeric metric rules are opt-in and read values from each scenario's `metrics` object, with top-level numeric fields such as `duration_seconds` also supported.
 
+Multi-configuration evaluation (leaderboard dashboard):
+
+```bash
+nav2_scenario_runner evaluate \
+  --entry navfn=reports/navfn/results.json \
+  --entry smac=reports/smac/results.json \
+  --entry teb=reports/teb/results.json \
+  --html-output reports/evaluation.html \
+  --markdown-output reports/evaluation.md \
+  --json-output reports/evaluation.json \
+  --github-summary
+```
+
+`evaluate` runs the same scenario suite under several Nav2 configurations and
+ranks them into a single dashboard: a `0-100` composite score leaderboard,
+per-metric comparison bars, and per-scenario trajectory overlays across every
+configuration. It takes at least two `--entry LABEL=report.json` configurations,
+normalizes each metric per scenario (with `--lower-is-better` / `--higher-is-better`
+overrides), and ranks by pass rate, then composite score, then metric wins. See
+[docs/evaluation.md](docs/evaluation.md).
+
 `--mode attach` currently supports:
 
 - `wait_for_nav2_active`
@@ -266,6 +287,7 @@ docs/
   master-architecture.md
   scenario-dsl.md
   metrics.md
+  evaluation.md
   simulator-adapters.md
   ci.md
   plugin-authoring.md
