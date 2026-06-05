@@ -1,0 +1,56 @@
+name: Benchmark PR
+
+# Dogfoods the bundled "Nav2 Benchmark" action: on every pull request it ranks
+# the example planner configs, renders a compact leaderboard + regression
+# comment, and upserts a single sticky comment on the PR.
+
+on:
+  pull_request:
+    paths:
+      - "examples/benchmark/**"
+      - "src/nav2_scenario_runner/**"
+      - "action.yml"
+      - ".github/workflows/benchmark-pr.yml"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Nav2 Benchmark
+        id: bench
+        uses: ./
+        with:
+          entries: |
+            navfn=examples/benchmark/navfn.json
+            smac=examples/benchmark/smac.json
+            teb=examples/benchmark/teb.json
+          history: examples/benchmark/history.jsonl
+          title: "Nav2 Benchmark (example planners)"
+          dashboard-url: "https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark"
+
+      - name: Upsert sticky PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- nav2-scenario-runner:benchmark -->';
+            const body = fs.readFileSync(process.env.COMMENT_FILE, 'utf8');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number, per_page: 100,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+        env:
+          COMMENT_FILE: ${{ steps.bench.outputs.comment-file }}
