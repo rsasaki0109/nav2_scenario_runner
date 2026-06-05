@@ -1,0 +1,45 @@
+name: "📊 Benchmark submission"
+description: "Propose a Nav2 configuration result for the public leaderboard."
+title: "[benchmark] <your-config-name>"
+labels: ["benchmark-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for benchmarking your Nav2 configuration! For the fastest path,
+        open a pull request that adds your run report under
+        `examples/benchmark/submissions/<name>.json` — it lands on the
+        [live leaderboard](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+        on the next deploy. Use this issue if you'd rather have a maintainer add it.
+  - type: input
+    id: config-name
+    attributes:
+      label: Configuration name
+      description: "Kebab-case label shown on the leaderboard."
+      placeholder: "acme-smac-tuned"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What's notable about this configuration?
+      description: "Planner, controller, key tuned parameters, hardware/sim."
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Run report JSON
+      description: "Paste the JSON run report covering straight_line, narrow_corridor, and u_turn."
+      render: json
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: "The report covers the same scenario ids as the core configs."
+          required: true
+        - label: "Metrics come from a real run (no fabricated numbers)."
+          required: true

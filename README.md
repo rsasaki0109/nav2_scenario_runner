@@ -5,6 +5,11 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 
+[![Benchmark winner](https://img.shields.io/endpoint?url=https%3A%2F%2Frsasaki0109.github.io%2Fnav2_scenario_runner%2Fbadge-winner.json)](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+[![Benchmark score](https://img.shields.io/endpoint?url=https%3A%2F%2Frsasaki0109.github.io%2Fnav2_scenario_runner%2Fbadge-score.json)](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+[![Pass rate](https://img.shields.io/endpoint?url=https%3A%2F%2Frsasaki0109.github.io%2Fnav2_scenario_runner%2Fbadge-passrate.json)](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+[![Regressions](https://img.shields.io/endpoint?url=https%3A%2F%2Frsasaki0109.github.io%2Fnav2_scenario_runner%2Fbadge-regressions.json)](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+
 Scenario-as-Code test runner for Nav2. Run repeatable navigation regression tests in simulation and CI.
 
 `nav2_scenario_runner` aims to bring a Playwright/Cypress-like developer experience to Nav2-based mobile robot development: write scenarios in YAML, run them from one CLI, collect Nav2-aware metrics, and publish CI-friendly reports.
@@ -251,6 +256,28 @@ nav2_scenario_runner pr-comment \
 ```
 
 See [docs/pr-benchmark-bot.md](docs/pr-benchmark-bot.md).
+
+Self-updating README badges (shields.io endpoints) and a public leaderboard:
+
+```bash
+nav2_scenario_runner badge \
+  --evaluation reports/evaluation.json \
+  --trend reports/trend.json \
+  --kind score \
+  --output docs/badge-score.json
+```
+
+`badge` emits shields [endpoint](https://shields.io/badges/endpoint-badge) JSON
+(`winner`, `score`, `passrate`, `regressions`). The badges at the top of this
+README point at JSON served from GitHub Pages, so they refresh themselves
+whenever the benchmark is regenerated — no CI secret, no third-party service.
+
+Anyone can join the **public leaderboard**: drop a Nav2 run report into
+[`examples/benchmark/submissions/`](examples/benchmark/submissions/) via pull
+request (or the [benchmark submission issue](.github/ISSUE_TEMPLATE/benchmark-submission.yml)).
+`scripts/build_dashboards.sh` auto-includes every submission, so a merged entry
+appears on the [live dashboard](https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark)
+on the next deploy.
 
 `--mode attach` currently supports:
 
