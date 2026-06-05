@@ -73,3 +73,6 @@
 - Add `scripts/build_dashboards.sh` to generate the evaluate, trend, and replay dashboards into `docs/` from the benchmark fixtures.
 - Publish live benchmark dashboards on the GitHub Pages site and regenerate them from the fixtures on every deploy.
 - Refresh the landing page to lead with the evaluation platform and link the leaderboard, trend, and replay dashboards.
+- Add `pr-comment` command to render a compact, sticky benchmark comment (medal leaderboard plus a regression section) from `evaluate`/`trend` JSON, carrying an HTML marker for in-place upsert.
+- Add a bundled composite GitHub Action (`action.yml`, "Nav2 Benchmark") that ranks Nav2 configs and emits a PR-ready comment, exposing `comment-file`, `evaluation-file`, and `winner` outputs.
+- Dogfood the action via `.github/workflows/benchmark-pr.yml`, which posts a self-updating benchmark comment on pull requests from the example suite.

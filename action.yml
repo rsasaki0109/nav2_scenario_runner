@@ -1,0 +1,106 @@
+name: "Nav2 Benchmark"
+description: "Rank Nav2 configurations into a leaderboard and render a PR-ready benchmark comment."
+author: "nav2_scenario_runner maintainers"
+branding:
+  icon: "bar-chart-2"
+  color: "green"
+
+inputs:
+  entries:
+    description: "Whitespace/newline-separated LABEL=report.json pairs (minimum 2)."
+    required: true
+  history:
+    description: "Optional history JSONL store. When set, a trend/regression section is added."
+    required: false
+    default: ""
+  title:
+    description: "Heading shown at the top of the generated comment."
+    required: false
+    default: "Nav2 Benchmark"
+  dashboard-url:
+    description: "Optional URL to a full HTML dashboard, linked in the comment footer."
+    required: false
+    default: ""
+  output-dir:
+    description: "Directory for generated artifacts (evaluation.json, trend.json, comment.md, *.html)."
+    required: false
+    default: "nav2-benchmark"
+  python-version:
+    description: "Python version used to run the runner."
+    required: false
+    default: "3.11"
+
+outputs:
+  comment-file:
+    description: "Path to the generated Markdown PR comment."
+    value: ${{ steps.render.outputs.comment-file }}
+  evaluation-file:
+    description: "Path to the machine-readable leaderboard JSON."
+    value: ${{ steps.render.outputs.evaluation-file }}
+  winner:
+    description: "Label of the top-ranked configuration."
+    value: ${{ steps.render.outputs.winner }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install nav2_scenario_runner
+      shell: bash
+      run: python -m pip install --quiet "${{ github.action_path }}"
+
+    - name: Render benchmark
+      id: render
+      shell: bash
+      env:
+        NSR_ENTRIES: ${{ inputs.entries }}
+        NSR_HISTORY: ${{ inputs.history }}
+        NSR_TITLE: ${{ inputs.title }}
+        NSR_DASHBOARD_URL: ${{ inputs.dashboard-url }}
+        NSR_OUTDIR: ${{ inputs.output-dir }}
+      run: |
+        set -euo pipefail
+        mkdir -p "$NSR_OUTDIR"
+
+        # Build --entry flags from whitespace/newline-separated pairs.
+        entry_args=()
+        for pair in $NSR_ENTRIES; do
+          entry_args+=(--entry "$pair")
+        done
+
+        nav2_scenario_runner evaluate "${entry_args[@]}" \
+          --json-output "$NSR_OUTDIR/evaluation.json" \
+          --html-output "$NSR_OUTDIR/evaluation.html"
+
+        trend_args=()
+        if [ -n "$NSR_HISTORY" ]; then
+          nav2_scenario_runner trend "$NSR_HISTORY" \
+            --json-output "$NSR_OUTDIR/trend.json" \
+            --html-output "$NSR_OUTDIR/trend.html"
+          trend_args=(--trend "$NSR_OUTDIR/trend.json")
+        fi
+
+        dashboard_args=()
+        if [ -n "$NSR_DASHBOARD_URL" ]; then
+          dashboard_args=(--dashboard-url "$NSR_DASHBOARD_URL")
+        fi
+
+        nav2_scenario_runner pr-comment \
+          --evaluation "$NSR_OUTDIR/evaluation.json" \
+          "${trend_args[@]}" \
+          --title "$NSR_TITLE" \
+          "${dashboard_args[@]}" \
+          --output "$NSR_OUTDIR/comment.md"
+
+        winner="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["leaderboard"][0]["label"])' "$NSR_OUTDIR/evaluation.json")"
+        {
+          echo "comment-file=$NSR_OUTDIR/comment.md"
+          echo "evaluation-file=$NSR_OUTDIR/evaluation.json"
+          echo "winner=$winner"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "::notice title=Nav2 Benchmark::Winner: $winner"
