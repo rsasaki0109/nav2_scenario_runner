@@ -22,8 +22,10 @@ on the next deploy.
    examples/benchmark/submissions/my-planner.json
    ```
 
-3. Open a pull request. CI validates the file, and once merged your entry shows
-   up on the leaderboard.
+3. Open a pull request. CI auto-reviews the file (label, core-scenario coverage,
+   in-bounds trajectories) and posts a sticky comment previewing where your
+   configuration would rank — see [docs/submission-review.md](../../../docs/submission-review.md).
+   Once merged your entry shows up on the leaderboard.
 
 ## Requirements
 
