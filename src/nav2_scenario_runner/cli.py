@@ -422,6 +422,61 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the badge JSON to this path (also printed to stdout).",
     )
 
+    submission_parser = subparsers.add_parser(
+        "validate-submission",
+        help="Validate community benchmark submission JSON and render a sticky PR review comment.",
+    )
+    submission_parser.add_argument(
+        "submissions",
+        nargs="+",
+        type=Path,
+        metavar="SUBMISSION.json",
+        help="Submission run report(s) to validate. The file stem is the leaderboard label.",
+    )
+    submission_parser.add_argument(
+        "--map",
+        dest="map_yaml",
+        type=Path,
+        default=None,
+        help="ROS map YAML to bounds-check trajectories against (e.g. the warehouse map).",
+    )
+    submission_parser.add_argument(
+        "--baseline",
+        action="append",
+        default=[],
+        metavar="LABEL=REPORT.json",
+        help="Core configuration to rank the submission against. Repeat for each. Enables the leaderboard preview.",
+    )
+    submission_parser.add_argument(
+        "--core-id",
+        action="append",
+        default=[],
+        metavar="SCENARIO_ID",
+        help="Scenario id every submission must cover. Repeat. Defaults to the core benchmark scenarios.",
+    )
+    submission_parser.add_argument(
+        "--title",
+        default="Submission review",
+        help="Heading shown at the top of the review comment.",
+    )
+    submission_parser.add_argument(
+        "--dashboard-url",
+        default=None,
+        help="Optional URL to the live leaderboard, linked in the footer.",
+    )
+    submission_parser.add_argument(
+        "--comment-output",
+        type=Path,
+        default=None,
+        help="Write the Markdown review comment to this path (also printed to stdout).",
+    )
+    submission_parser.add_argument(
+        "--json-output",
+        type=Path,
+        default=None,
+        help="Write a machine-readable validation summary to this path.",
+    )
+
     compare_parser = subparsers.add_parser("compare", help="Compare current JSON report against a baseline.")
     compare_parser.add_argument("current", type=Path, help="Current JSON report path.")
     compare_parser.add_argument("--baseline", type=Path, required=True, help="Baseline JSON report path.")
@@ -527,6 +582,18 @@ def main(argv: list[str] | None = None) -> int:
             trend_path=args.trend,
             kind=args.kind,
             output_path=args.output,
+        )
+
+    if args.command == "validate-submission":
+        return _cmd_validate_submission(
+            submissions=args.submissions,
+            map_yaml=args.map_yaml,
+            baseline=args.baseline,
+            core_ids=args.core_id,
+            title=args.title,
+            dashboard_url=args.dashboard_url,
+            comment_output=args.comment_output,
+            json_output=args.json_output,
         )
 
     if args.command == "compare":
@@ -863,6 +930,117 @@ def _cmd_badge(
     else:
         print(rendered, end="")
     return 0
+
+
+def _cmd_validate_submission(
+    submissions: list[Path],
+    map_yaml: Path | None,
+    baseline: list[str],
+    core_ids: list[str],
+    title: str,
+    dashboard_url: str | None,
+    comment_output: Path | None,
+    json_output: Path | None,
+) -> int:
+    import json
+
+    from .evaluate import ConfigEntry, build_evaluation, evaluation_to_dict
+    from .submission import (
+        CORE_SCENARIO_IDS,
+        SubmissionCheck,
+        build_review_comment,
+        validate_submission,
+    )
+
+    try:
+        map_image = load_map(map_yaml) if map_yaml else None
+        baseline_entries = load_entries([parse_entry(raw) for raw in baseline], minimum=0) if baseline else []
+    except ValueError as exc:
+        print(f"Validate submission failed: {exc}", file=sys.stderr)
+        return 2
+
+    core = tuple(core_ids) if core_ids else CORE_SCENARIO_IDS
+    baseline_labels = {entry.label for entry in baseline_entries}
+
+    checks: list[SubmissionCheck] = []
+    valid_entries: list[ConfigEntry] = []
+    submitted_labels: set[str] = set()
+
+    for path in submissions:
+        label = path.stem
+        # A submission must not collide with a core config or an earlier file in
+        # the same PR, so grow the "already seen" set as we go.
+        existing = baseline_labels | submitted_labels
+        try:
+            report = json.loads(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            check = SubmissionCheck(label=label, path=str(path), errors=[f"Cannot read file: {exc}"])
+            checks.append(check)
+            continue
+        except json.JSONDecodeError as exc:
+            check = SubmissionCheck(label=label, path=str(path), errors=[f"Invalid JSON: {exc}"])
+            checks.append(check)
+            continue
+
+        check = validate_submission(
+            label,
+            report,
+            map_image=map_image,
+            core_ids=core,
+            existing_labels=existing,
+            path=str(path),
+        )
+        checks.append(check)
+        submitted_labels.add(label)
+        if check.ok and isinstance(report, dict):
+            valid_entries.append(ConfigEntry(label=label, path=str(path), report=report))
+
+    all_ok = all(check.ok for check in checks)
+
+    leaderboard: list[dict] | None = None
+    if all_ok and baseline_entries and valid_entries:
+        evaluation = build_evaluation(baseline_entries + valid_entries)
+        leaderboard = evaluation_to_dict(evaluation)["leaderboard"]
+
+    comment = build_review_comment(
+        checks,
+        leaderboard=leaderboard,
+        submitted_labels=submitted_labels,
+        title=title,
+        dashboard_url=dashboard_url,
+    )
+
+    for check in checks:
+        status = "OK  " if check.ok else "FAIL"
+        print(f"{status} {check.label} ({len(check.errors)} error(s), {len(check.warnings)} warning(s))")
+        for error in check.errors:
+            print(f"  - {error}")
+
+    if comment_output:
+        write_text_report(comment, comment_output)
+        print(f"Review comment: {comment_output}")
+
+    if json_output:
+        summary = {
+            "ok": all_ok,
+            "submissions": [
+                {
+                    "label": check.label,
+                    "path": check.path,
+                    "ok": check.ok,
+                    "errors": check.errors,
+                    "warnings": check.warnings,
+                    "scenario_ids": check.scenario_ids,
+                    "trajectory_scenarios": check.trajectory_scenarios,
+                }
+                for check in checks
+            ],
+        }
+        json_output.parent.mkdir(parents=True, exist_ok=True)
+        json_output.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"Validation summary: {json_output}")
+
+    return 0 if all_ok else 1
 
 
 def _cmd_compare(

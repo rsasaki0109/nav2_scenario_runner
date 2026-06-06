@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `validate-submission` command and `Validate submissions` workflow that auto-review community benchmark submission PRs and preview the leaderboard rank in a sticky comment.
 - Add initial planning scaffold.
 - Add master architecture design draft.
 - Add DSL, metrics, simulator adapter, CI, plugin, and robot profile docs.
