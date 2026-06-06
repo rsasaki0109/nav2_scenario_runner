@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Publish the real Nav2 + Gazebo run on the live dashboards as a separate **Measured** track: the `Nav2 Real Benchmark` workflow auto-commits each run under `examples/benchmark/real/`, `scripts/build_dashboards.sh` renders `measured-viewer`/`measured-trend` dashboards from it, the landing page links them under a Measured heading (kept distinct from the deterministic Demo fixtures), and the Pages deploy redeploys via `workflow_run` so the measured site refreshes weekly without a human push.
 - Make the real Nav2 + Gazebo benchmark actually navigate end-to-end: the suite now drives the `tb3_sandbox` world (bare `gz sim` server + `tb3_simulation_launch use_simulator:=false` for robot/bridge/rsp/Nav2), with AMCL self-localization and per-scenario `ROS_DOMAIN_ID`/`GZ_PARTITION` isolation, producing real `goal_reached`/`travel_time`/`path_length`/trajectory metrics for all three scenarios.
 - Add `simulator.run: true` to start the Gazebo server unpaused (`gz sim -r`) so `use_sim_time` consumers don't hang.
 - Feature the interactive benchmark explorer as the README hero with an animated scrub GIF linked to the live site.

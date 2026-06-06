@@ -29,6 +29,11 @@ Project site: <https://rsasaki0109.github.io/nav2_scenario_runner/>
   &nbsp;·&nbsp; toggle planners, switch scenarios, and scrub the robot along every recorded trajectory.
 </p>
 
+<p align="center">
+  <b><a href="https://rsasaki0109.github.io/nav2_scenario_runner/measured-viewer.html">📡 Measured: real Nav2 + Gazebo, run weekly in CI ›</a></b>
+  &nbsp;·&nbsp; the same explorer, driven by a live ROS&nbsp;2 Jazzy + Nav2 + Gazebo run on a GPU-less runner.
+</p>
+
 ```bash
 nav2_scenario_runner run examples/turtlebot3_gazebo/smoke.yaml
 ```
