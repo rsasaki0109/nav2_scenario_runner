@@ -205,6 +205,11 @@ def gazebo_sim_command(scenario: Scenario) -> list[str]:
 
     world_arg = _resolve_world_arg(scenario, str(world))
     command = ["gz", "sim"]
+    # ``-r`` starts the simulation running instead of paused. A paused server
+    # never advances /clock, so use_sim_time consumers (Nav2) would hang; real
+    # navigation scenarios set ``simulator.run: true`` to drive the sim forward.
+    if bool(simulator.get("run", False)):
+        command.append("-r")
     if bool(simulator.get("headless", True)):
         command.append("-s")
     command.append(world_arg)
