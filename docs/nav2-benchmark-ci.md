@@ -32,22 +32,44 @@ docker run --rm -v "$PWD/out:/out" \
 
 [`docker/run_benchmark.sh`](../docker/run_benchmark.sh) does the real work:
 
-1. `doctor --check-gazebo` preflight.
-2. `run examples/benchmark/scenarios/ --mode gazebo-sim` with the full execution
-   ladder (`--launch-scenario-stack --wait-for-ros-graph --wait-for-nav2
-   --wait-for-navigation-data --execute-nav2 --collect-contacts`), producing a
-   real `results.json`.
-3. The run report **shares the benchmark config schema**, so it feeds the
-   dashboards directly — no conversion. It is copied to `out/<CONFIG_LABEL>.json`.
-4. `record` appends the run to `out/history.jsonl` (labelled by commit SHA).
-5. `trend` and `viewer` (and `evaluate` once ≥2 configs exist) render the
+1. Export headless rendering env (software GL / offscreen Qt) and
+   `GZ_SIM_RESOURCE_PATH`, then expand the shipped `tb3_sandbox.sdf.xacro` world
+   into a plain SDF the bare `gz sim` server can load.
+2. `doctor --check-gazebo` preflight.
+3. Run **each scenario in its own invocation** under a unique `ROS_DOMAIN_ID` and
+   `GZ_PARTITION` with the full execution ladder (`--launch-scenario-stack
+   --wait-for-ros-graph --wait-for-nav2 --wait-for-navigation-data
+   --execute-nav2`). Per-scenario isolation matters: a shared domain/partition
+   lets a previous scenario's lingering Nav2 nodes and Gazebo server block the
+   next one from activating.
+4. Merge the per-scenario `results.json` files into one. The merged report
+   **shares the benchmark config schema**, so it feeds the dashboards directly —
+   no conversion. It is copied to `out/<CONFIG_LABEL>.json`.
+5. `record` appends the run to `out/history.jsonl` (labelled by commit SHA).
+6. `trend` and `viewer` (and `evaluate` once ≥2 configs exist) render the
    dashboards from the real reports.
+
+### How the stack is wired
+
+The runner's Gazebo backend always starts a bare `gz sim -r -s <world>` server
+(the `-r` comes from `simulator.run: true`, so the clock advances and Nav2
+doesn't hang). Everything else — the robot, the `ros_gz` bridge,
+`robot_state_publisher`, and Nav2 itself — comes from a single
+`nav2.bringup` launch of `tb3_simulation_launch.py` with `use_simulator:=False`,
+so it spawns into the runner's server instead of starting a second, conflicting
+one. AMCL is configured to self-localize at startup
+([`examples/benchmark/config/nav2_params.yaml`](../examples/benchmark/config/nav2_params.yaml),
+`set_initial_pose`), which breaks the chicken-and-egg where costmaps can't
+activate until the robot is localized; the same file shrinks `inflation_radius`
+to 0.2 m so the small `tb3_sandbox` aisles stay navigable.
 
 The benchmark scenarios live in
 [`examples/benchmark/scenarios/`](../examples/benchmark/scenarios/) —
-`straight_line`, `narrow_corridor`, and `u_turn`. Their ids match the fixture
-configs, so real runs slot into the same leaderboard and explorer rows. They are
-linted and dry-run in CI (`tests/test_benchmark_scenarios.py`).
+`straight_line`, `narrow_corridor`, and `u_turn` — each a short, reachable
+navigation in the `tb3_sandbox` world that yields real `goal_reached`,
+`travel_time`, `path_length_traveled`, and trajectory metrics. (The tb3 robot has
+no contact sensors, so collision metrics are left unmeasured rather than failing
+the run.) They are linted and dry-run in CI (`tests/test_benchmark_scenarios.py`).
 
 ## In CI
 

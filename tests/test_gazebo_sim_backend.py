@@ -58,6 +58,19 @@ def test_gazebo_sim_command_uses_headless_server_mode(tmp_path):
     assert command == ["gz", "sim", "-s", str(world)]
 
 
+def test_gazebo_sim_command_run_flag_starts_unpaused(tmp_path):
+    world = tmp_path / "worlds/empty.sdf"
+    world.parent.mkdir()
+    world.write_text("<sdf version='1.9'></sdf>\n", encoding="utf-8")
+    scenario = _scenario(tmp_path / "smoke.yaml", world="worlds/empty.sdf", headless=True, run=True)
+
+    command = gazebo_sim_command(scenario)
+
+    # `-r` makes the server advance the clock so use_sim_time consumers (Nav2)
+    # don't hang waiting for /clock; `-s` keeps it headless.
+    assert command == ["gz", "sim", "-r", "-s", str(world)]
+
+
 def test_gazebo_world_reset_command_uses_sdf_world_name(tmp_path):
     _write_world(tmp_path / "worlds/renamed_file.sdf")
     scenario = _scenario(tmp_path / "smoke.yaml", world="worlds/renamed_file.sdf")
@@ -1384,6 +1397,7 @@ def _scenario(
     path: Path,
     world: str = "worlds/empty.sdf",
     headless: bool = True,
+    run: bool = False,
     runtime: dict | None = None,
     simulator_launch: dict | None = None,
     nav2: dict | None = None,
@@ -1396,6 +1410,8 @@ def _scenario(
         "headless": headless,
         "world": world,
     }
+    if run:
+        simulator["run"] = True
     if simulator_launch is not None:
         simulator["launch"] = simulator_launch
 

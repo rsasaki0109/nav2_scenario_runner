@@ -3,12 +3,12 @@ kind: Scenario
 
 metadata:
   name: straight_line
-  description: Drive straight to a goal 2m ahead in open space.
+  description: Drive straight ~1.4 m along a clear aisle of the tb3_sandbox world.
   tags: [benchmark, navigation, diff_drive]
   owner: navigation-team
 
 runtime:
-  timeout: 90
+  timeout: 300
   use_sim_time: true
   seed: 42
   isolation:
@@ -17,24 +17,35 @@ runtime:
 simulator:
   type: gazebo_sim
   headless: true
-  world: worlds/tb3_world.sdf
-  launch:
-    package: nav2_minimal_tb3_sim
-    file: simulation.launch.py
+  run: true
+  # The bare `gz sim -r -s` server runs the world; the robot, ros_gz bridge,
+  # robot_state_publisher, and Nav2 all come from the single nav2.bringup launch
+  # below (tb3_simulation_launch with use_simulator:=false), which avoids a
+  # second, conflicting Gazebo server.
+  world: /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf
 
 robot:
   profile: turtlebot3_waffle
   initial_pose:
-    x: 0.0
-    y: 0.0
+    x: -0.7
+    y: 0.5
     yaw: 0.0
 
 nav2:
   bringup:
     package: nav2_bringup
-    file: bringup_launch.py
-  params: config/nav2_params.yaml
-  map: maps/warehouse.yaml
+    file: tb3_simulation_launch.py
+    args:
+      # Capitalized strings: tb3_simulation_launch evaluates these in a
+      # PythonExpression, so lowercase true/false would raise NameError.
+      use_simulator: "False"   # the runner's bare gz server is the simulator
+      use_rviz: "False"
+      headless: "True"
+      use_sim_time: "True"
+      x_pose: -0.7
+      y_pose: 0.5
+  params: /opt/nav2_scenario_runner/examples/benchmark/config/nav2_params.yaml
+  map: /opt/ros/jazzy/share/nav2_bringup/maps/tb3_sandbox.yaml
   autostart: true
 
 steps:
@@ -42,20 +53,25 @@ steps:
       timeout: 30
 
   - set_initial_pose:
-      x: 0.0
-      y: 0.0
+      x: -0.7
+      y: 0.5
       yaw: 0.0
+
+  # Let AMCL localize and the global/local costmaps populate before sending the
+  # goal, otherwise the BT navigator rejects it (no map->odom / costmap yet).
+  - wait:
+      seconds: 15
 
   - send_goal:
       name: ahead
       pose:
-        x: 2.0
-        y: 0.0
+        x: 0.7
+        y: 0.5
         yaw: 0.0
 
   - expect_goal_reached:
       goal: ahead
-      timeout: 60
+      timeout: 120
 
 assertions:
   - collision_free: {}
