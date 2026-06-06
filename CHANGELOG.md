@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Make the real Nav2 + Gazebo benchmark actually navigate end-to-end: the suite now drives the `tb3_sandbox` world (bare `gz sim` server + `tb3_simulation_launch use_simulator:=false` for robot/bridge/rsp/Nav2), with AMCL self-localization and per-scenario `ROS_DOMAIN_ID`/`GZ_PARTITION` isolation, producing real `goal_reached`/`travel_time`/`path_length`/trajectory metrics for all three scenarios.
+- Add `simulator.run: true` to start the Gazebo server unpaused (`gz sim -r`) so `use_sim_time` consumers don't hang.
 - Feature the interactive benchmark explorer as the README hero with an animated scrub GIF linked to the live site.
 - Add `validate-submission` command and `Validate submissions` workflow that auto-review community benchmark submission PRs and preview the leaderboard rank in a sticky comment.
 - Add initial planning scaffold.
