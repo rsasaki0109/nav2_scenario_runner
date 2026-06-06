@@ -22,3 +22,6 @@ rosbag2_*/
 .idea/
 .vscode/
 *.swp
+
+# Local real-benchmark output (published into examples/benchmark/real/ instead)
+/out/
