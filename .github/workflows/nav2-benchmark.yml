@@ -17,7 +17,9 @@ on:
     - cron: "0 6 * * 1"
 
 permissions:
-  contents: read
+  # write so the job can auto-commit the measured run reports back to the repo,
+  # which feeds the public "Measured" dashboards on the next Pages deploy.
+  contents: write
 
 jobs:
   benchmark:
@@ -25,6 +27,10 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Build benchmark image
         run: docker build -f docker/Dockerfile -t nav2-scenario-runner:jazzy-gazebo .
@@ -56,3 +62,32 @@ jobs:
           name: nav2-real-benchmark
           path: out/
           if-no-files-found: warn
+
+      # Publish the measured report into the repo so the public "Measured"
+      # dashboards (built by scripts/build_dashboards.sh on Pages deploy) show
+      # real metrics. Runs even if a scenario failed, so partial-but-real data
+      # still lands. GITHUB_TOKEN pushes don't re-trigger `push` workflows, so
+      # the Pages deploy listens for this workflow via `workflow_run`.
+      - name: Publish measured run to repo
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          LABEL="${{ github.event.inputs.config-label || 'nav2-jazzy' }}"
+          if [ ! -f "out/$LABEL.json" ]; then
+            echo "No measured report (out/$LABEL.json); nothing to publish."
+            exit 0
+          fi
+          pip install --quiet -e .
+          mkdir -p examples/benchmark/real
+          cp "out/$LABEL.json" "examples/benchmark/real/$LABEL.json"
+          python3 -m nav2_scenario_runner record "examples/benchmark/real/$LABEL.json" \
+            --history examples/benchmark/real/history.jsonl \
+            --label "$(git rev-parse --short HEAD)"
+          if git diff --quiet -- examples/benchmark/real; then
+            echo "No measured data changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add examples/benchmark/real
+          git commit -m "chore(benchmark): publish measured run ${{ github.sha }} [skip ci]"
+          git push

@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Redeploy after the real benchmark auto-commits a measured run. A push made
+  # with GITHUB_TOKEN does not re-trigger `push` workflows, so the measured
+  # dashboards would otherwise go stale until the next human push to main.
+  workflow_run:
+    workflows: ["Nav2 Real Benchmark"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -17,6 +23,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # On a workflow_run trigger, only deploy if the benchmark actually succeeded
+    # (a failed run commits no new data). push/workflow_dispatch always deploy.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -81,6 +81,31 @@ line to the job summary. The per-PR
 [benchmark bot](pr-benchmark-bot.md) stays on the lightweight fixtures for fast
 feedback.
 
+## Publishing measured data to the public dashboards
+
+The public GitHub Pages site builds its dashboards in two clearly separated
+tracks:
+
+- **Demo** — deterministic sample fixtures (`navfn`/`smac`/`teb`) so the
+  multi-planner leaderboard, trend, and explorer render without a GPU/sim.
+- **Measured** — real metrics from this workflow, published under
+  [`examples/benchmark/real/`](../examples/benchmark/real/).
+
+After each real run on `main`, `nav2-benchmark.yml` copies
+`out/<config-label>.json` into `examples/benchmark/real/<config-label>.json`,
+appends the run to `examples/benchmark/real/history.jsonl` (labelled by commit
+SHA), and commits the result back to the repository. `scripts/build_dashboards.sh`
+detects those files and renders `docs/measured-viewer.html` and
+`docs/measured-trend.html` (and `measured-evaluation.html` once two or more
+measured configs exist), which the landing page links under the **Measured**
+heading.
+
+A push made with `GITHUB_TOKEN` does not re-trigger `push` workflows, so the
+Pages deploy ([`pages.yml`](../.github/workflows/pages.yml)) listens for the
+real benchmark via `workflow_run` and redeploys once the measured commit lands —
+keeping the live "Measured" dashboards fresh every week without a human in the
+loop.
+
 ## Comparing planners
 
 To rank multiple configurations, run the suite once per planner/controller
@@ -90,6 +115,7 @@ two or more config reports are present, and `viewer`/`evaluate` then show them
 side by side.
 
 > The committed `examples/benchmark/*.json` fixtures are representative samples
-> so the public dashboards render deterministically without a GPU/sim in the
-> Pages job. Replace them (or add submissions) with real `run_benchmark.sh`
-> output to publish measured numbers.
+> so the **Demo** dashboards render deterministically without a GPU/sim in the
+> Pages job. The **Measured** dashboards instead read
+> `examples/benchmark/real/*.json`, which this workflow auto-commits from real
+> `run_benchmark.sh` output — so the published numbers are real.

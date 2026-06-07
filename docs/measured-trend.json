@@ -1,0 +1,40 @@
+{
+  "schema": "nav2_scenario_runner.trend/v1alpha1",
+  "runs": 1,
+  "labels": [
+    "84b1372"
+  ],
+  "pass_rates": [
+    1.0
+  ],
+  "metrics": [
+    "travel_time",
+    "path_length_traveled",
+    "replanning_count",
+    "goal_reached",
+    "clock_requested",
+    "contact_collection_requested",
+    "execute_simulator_steps",
+    "launch_process_count",
+    "launch_scenario_stack",
+    "launch_stack_started",
+    "nav2_executed",
+    "nav2_readiness_requested",
+    "nav2_ready",
+    "nav2_timeout",
+    "nav2_wait_seconds",
+    "navigation_data_ready",
+    "navigation_data_requested",
+    "navigation_data_timeout",
+    "navigation_data_wait_seconds",
+    "preflight_skipped",
+    "ros_graph_ready",
+    "ros_graph_requested",
+    "ros_graph_timeout",
+    "ros_graph_wait_seconds",
+    "simulator_started",
+    "trajectory_point_count",
+    "world_reset_requested"
+  ],
+  "latest_deltas": {}
+}

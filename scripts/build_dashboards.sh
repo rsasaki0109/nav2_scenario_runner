@@ -64,5 +64,46 @@ for kind in winner score passrate regressions; do
     --output "$OUT/badge-$kind.json"
 done
 
+# --- Measured track: real Nav2 + Gazebo runs -------------------------------
+# The dashboards above are deterministic *demo* fixtures (navfn/smac/teb) that
+# render without a GPU/sim. The real, GPU-less CI run publishes its measured
+# reports under examples/benchmark/real/ (the `Nav2 Real Benchmark` workflow
+# auto-commits them weekly). When present, build a clearly-separated
+# `measured-*` set so the live site shows real metrics alongside the demo.
+REAL="$BENCH/real"
+REAL_ENTRIES=()
+for report in $(find "$REAL" -maxdepth 1 -name '*.json' 2>/dev/null | sort); do
+  label="$(basename "$report" .json)"
+  REAL_ENTRIES+=(--entry "$label=$report")
+done
+
+if [ "${#REAL_ENTRIES[@]}" -ge 2 ]; then
+  echo "Building measured (real Nav2) dashboards..."
+  MEAS_MAP=()
+  [ -f "$BENCH/maps/tb3_sandbox.yaml" ] && MEAS_MAP=(--map "$BENCH/maps/tb3_sandbox.yaml")
+
+  "${RUN[@]}" viewer \
+    "${REAL_ENTRIES[@]}" \
+    "${MEAS_MAP[@]}" \
+    --title "Nav2 Benchmark Explorer (measured · real Nav2 + Gazebo)" \
+    --html-output "$OUT/measured-viewer.html"
+
+  "${RUN[@]}" trend "$REAL/history.jsonl" \
+    --html-output "$OUT/measured-trend.html" \
+    --json-output "$OUT/measured-trend.json"
+
+  # Rank measured configs against each other only once there are at least two
+  # (each contributes one --entry pair = 2 args).
+  if [ "${#REAL_ENTRIES[@]}" -ge 4 ]; then
+    "${RUN[@]}" evaluate \
+      "${REAL_ENTRIES[@]}" \
+      --html-output "$OUT/measured-evaluation.html" \
+      --json-output "$OUT/measured-evaluation.json"
+  fi
+  echo "Measured dashboards written to $OUT/measured-{viewer,trend}.html"
+else
+  echo "No measured run reports under $REAL/ yet; skipping measured dashboards."
+fi
+
 echo "Dashboards written to $OUT/{evaluation,trend,replay,viewer}.html"
 echo "Badges written to $OUT/badge-{winner,score,passrate,regressions}.json"
