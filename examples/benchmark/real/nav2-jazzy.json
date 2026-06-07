@@ -1,0 +1,1158 @@
+{
+  "runner_version": "0.1.0",
+  "generated_at": "2026-06-07T00:34:59.397636+00:00",
+  "mode": "gazebo_sim",
+  "total": 3,
+  "passed": 3,
+  "failed": 0,
+  "scenarios": [
+    {
+      "scenario_id": "narrow_corridor",
+      "name": "narrow_corridor",
+      "path": "/opt/nav2_scenario_runner/examples/benchmark/scenarios/narrow_corridor.yaml",
+      "tags": [
+        "benchmark",
+        "diff_drive",
+        "navigation"
+      ],
+      "status": "passed",
+      "step_count": 5,
+      "assertion_count": 5,
+      "duration_seconds": 43.21953024994582,
+      "failure_reason": null,
+      "steps": [
+        {
+          "index": 0,
+          "kind": "gazebo_sim.launch",
+          "status": "passed",
+          "duration_seconds": 25.00132458936423,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 1,
+          "kind": "nav2.bringup",
+          "status": "passed",
+          "duration_seconds": 25.001311222091317,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 2,
+          "kind": "ros_graph.readiness",
+          "status": "passed",
+          "duration_seconds": 1.4001062819734216,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 3,
+          "kind": "nav2.readiness",
+          "status": "passed",
+          "duration_seconds": 0.6704594753682613,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 4,
+          "kind": "navigation_data.readiness",
+          "status": "passed",
+          "duration_seconds": 5.830555926077068,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 5,
+          "kind": "wait_for_nav2_active",
+          "status": "passed",
+          "duration_seconds": 0.2503521591424942,
+          "failure_reason": null,
+          "time_offset_seconds": 32.90250993333757
+        },
+        {
+          "index": 6,
+          "kind": "set_initial_pose",
+          "status": "passed",
+          "duration_seconds": 1.6324109444394708,
+          "failure_reason": null,
+          "time_offset_seconds": 33.15287773590535
+        },
+        {
+          "index": 7,
+          "kind": "send_goal",
+          "status": "passed",
+          "duration_seconds": 0.06181580480188131,
+          "failure_reason": null,
+          "time_offset_seconds": 34.78530651796609
+        },
+        {
+          "index": 8,
+          "kind": "expect_goal_reached",
+          "status": "passed",
+          "duration_seconds": 8.039467289112508,
+          "failure_reason": null,
+          "time_offset_seconds": 34.84713353589177
+        }
+      ],
+      "assertions": [
+        {
+          "index": 0,
+          "kind": "collision_free",
+          "status": "skipped",
+          "message": "Required metric is not available: collision_free",
+          "severity": "error",
+          "metric": "collision_free",
+          "actual": null,
+          "expected": null
+        },
+        {
+          "index": 1,
+          "kind": "goal_reached",
+          "status": "passed",
+          "message": "Goal reached.",
+          "severity": "error",
+          "metric": "goal_reached",
+          "actual": true,
+          "expected": true
+        },
+        {
+          "index": 2,
+          "kind": "travel_time",
+          "status": "passed",
+          "message": "travel_time=8.03947 is within max 60.",
+          "severity": "error",
+          "metric": "travel_time",
+          "actual": 8.039470128715038,
+          "expected": 60.0
+        },
+        {
+          "index": 3,
+          "kind": "path_length",
+          "status": "passed",
+          "message": "path_length_traveled=1.18292 is within max 4.",
+          "severity": "error",
+          "metric": "path_length_traveled",
+          "actual": 1.1829152012772228,
+          "expected": 4.0
+        },
+        {
+          "index": 4,
+          "kind": "recovery_count",
+          "status": "skipped",
+          "message": "Required metric is not available: recovery_count",
+          "severity": "error",
+          "metric": "recovery_count",
+          "actual": null,
+          "expected": null
+        }
+      ],
+      "metrics": {
+        "simulator_started": true,
+        "simulator_backend": "gazebo_sim",
+        "preflight_skipped": true,
+        "error_type": "",
+        "artifact_dir": "/out/reports/narrow_corridor/artifacts/narrow_corridor",
+        "gazebo_log": "/out/reports/narrow_corridor/artifacts/narrow_corridor/gazebo.log",
+        "scenario_copy": "/out/reports/narrow_corridor/artifacts/narrow_corridor/scenario.yaml",
+        "metadata": "/out/reports/narrow_corridor/artifacts/narrow_corridor/metadata.json",
+        "world": "/opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "simulator_log": "/out/reports/narrow_corridor/artifacts/narrow_corridor/gazebo.log",
+        "clock_requested": false,
+        "nav2_executed": true,
+        "nav2_status": "passed",
+        "launch_scenario_stack": true,
+        "launch_stack_started": true,
+        "launch_process_count": 1,
+        "ros_graph_requested": true,
+        "nav2_readiness_requested": true,
+        "navigation_data_requested": true,
+        "world_reset_requested": false,
+        "execute_simulator_steps": false,
+        "contact_collection_requested": false,
+        "ros_graph_ready": true,
+        "ros_graph_wait_seconds": 1.400106,
+        "ros_graph_timeout": 90.0,
+        "ros_graph_commands": "ros2 node list; ros2 topic list",
+        "ros_graph_error": "",
+        "nav2_ready": true,
+        "nav2_wait_seconds": 0.670459,
+        "nav2_timeout": 180.0,
+        "nav2_error": "",
+        "navigation_data_ready": true,
+        "navigation_data_wait_seconds": 5.830556,
+        "navigation_data_timeout": 180.0,
+        "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
+        "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
+        "navigation_data_error": "",
+        "nav2_bringup_log": "/out/reports/narrow_corridor/artifacts/narrow_corridor/nav2_bringup.log",
+        "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "travel_time": 8.039470128715038,
+        "travel_time.through_gap": 8.039470128715038,
+        "goal_reached": true,
+        "path_length_traveled": 1.1829152012772228,
+        "path_length_traveled.through_gap": 1.1829152012772228,
+        "replanning_count": 7,
+        "replanning_count.through_gap": 7,
+        "trajectory": [
+          {
+            "x": 2.2371907111849682e-07,
+            "y": 3.3227224807884923e-16
+          },
+          {
+            "x": -0.020647765915002836,
+            "y": 0.00015779371425379764
+          },
+          {
+            "x": -0.04392176714455719,
+            "y": 0.0007539979566723014
+          },
+          {
+            "x": -0.06476425993801113,
+            "y": 0.0018859853327954294
+          },
+          {
+            "x": -0.0848572721748354,
+            "y": 0.004090893072029397
+          },
+          {
+            "x": -0.06551768215927187,
+            "y": -0.002802125856339582
+          },
+          {
+            "x": -0.047479131941161046,
+            "y": -0.01177931448592322
+          },
+          {
+            "x": -0.028790599955130478,
+            "y": -0.023267100417774366
+          },
+          {
+            "x": -0.011006133527697878,
+            "y": -0.03607257831887425
+          },
+          {
+            "x": 0.005273478927592844,
+            "y": -0.04942249970226233
+          },
+          {
+            "x": 0.021100960639492936,
+            "y": -0.0651971079428375
+          },
+          {
+            "x": 0.0340147068262029,
+            "y": -0.08331206006003537
+          },
+          {
+            "x": 0.046109925010685955,
+            "y": -0.10594789802446744
+          },
+          {
+            "x": 0.05564653176429253,
+            "y": -0.12866836621288366
+          },
+          {
+            "x": 0.062492773226113,
+            "y": -0.14882684061705123
+          },
+          {
+            "x": 0.06890239551266453,
+            "y": -0.1719420814245814
+          },
+          {
+            "x": 0.07463730108647221,
+            "y": -0.19797427100024986
+          },
+          {
+            "x": 0.07946690671286902,
+            "y": -0.2268526916823234
+          },
+          {
+            "x": 0.08216975025405836,
+            "y": -0.24812059094177724
+          },
+          {
+            "x": 0.08431603745761082,
+            "y": -0.2701669975922675
+          },
+          {
+            "x": 0.08592867304596206,
+            "y": -0.29346201133051775
+          },
+          {
+            "x": 0.08696142345227828,
+            "y": -0.3173687663288162
+          },
+          {
+            "x": 0.08744555206797508,
+            "y": -0.3423761494133578
+          },
+          {
+            "x": 0.08741175154838472,
+            "y": -0.3678914857587563
+          },
+          {
+            "x": 0.08692270263623189,
+            "y": -0.39369620413031226
+          },
+          {
+            "x": 0.08602920408062413,
+            "y": -0.4194068316191448
+          },
+          {
+            "x": 0.08480508622087064,
+            "y": -0.44481125974193275
+          },
+          {
+            "x": 0.08330937975935192,
+            "y": -0.46987693550552834
+          },
+          {
+            "x": 0.08158251804795254,
+            "y": -0.49476165550787377
+          },
+          {
+            "x": 0.07963885199797088,
+            "y": -0.5195797369618009
+          },
+          {
+            "x": 0.07750969455313429,
+            "y": -0.5442773524616843
+          },
+          {
+            "x": 0.07533537405259934,
+            "y": -0.5683703386615273
+          },
+          {
+            "x": 0.07312133912861353,
+            "y": -0.5924611012557562
+          },
+          {
+            "x": 0.07098516671692023,
+            "y": -0.6162648194269033
+          },
+          {
+            "x": 0.06900255856738043,
+            "y": -0.6395411736892825
+          },
+          {
+            "x": 0.06722427599495233,
+            "y": -0.6624168314270912
+          },
+          {
+            "x": 0.06569113672751196,
+            "y": -0.6850943464947825
+          },
+          {
+            "x": 0.06446405348782154,
+            "y": -0.7075366093235262
+          },
+          {
+            "x": 0.06360776877925131,
+            "y": -0.7294239844863446
+          },
+          {
+            "x": 0.0631536686691481,
+            "y": -0.7507420373866627
+          },
+          {
+            "x": 0.06314312720607229,
+            "y": -0.7714548449529974
+          },
+          {
+            "x": 0.06359147089964291,
+            "y": -0.7916005361950788
+          },
+          {
+            "x": 0.06516446769062238,
+            "y": -0.8202798112233196
+          },
+          {
+            "x": 0.06780337249075537,
+            "y": -0.8469268274643301
+          },
+          {
+            "x": 0.07129283589875601,
+            "y": -0.8704989684509525
+          },
+          {
+            "x": 0.07559955763120843,
+            "y": -0.891803408515436
+          },
+          {
+            "x": 0.08217580333195648,
+            "y": -0.9160672004663397
+          },
+          {
+            "x": 0.08922507499007246,
+            "y": -0.9357616416397079
+          },
+          {
+            "x": 0.09913269864851217,
+            "y": -0.956421762618938
+          },
+          {
+            "x": 0.11085129625143189,
+            "y": -0.9732214991399598
+          },
+          {
+            "x": 0.09080816926622685,
+            "y": -0.9662643699814483
+          }
+        ],
+        "trajectory_point_count": 51
+      }
+    },
+    {
+      "scenario_id": "straight_line",
+      "name": "straight_line",
+      "path": "/opt/nav2_scenario_runner/examples/benchmark/scenarios/straight_line.yaml",
+      "tags": [
+        "benchmark",
+        "diff_drive",
+        "navigation"
+      ],
+      "status": "passed",
+      "step_count": 5,
+      "assertion_count": 5,
+      "duration_seconds": 37.11841043736786,
+      "failure_reason": null,
+      "steps": [
+        {
+          "index": 0,
+          "kind": "gazebo_sim.launch",
+          "status": "passed",
+          "duration_seconds": 25.001348834484816,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 1,
+          "kind": "nav2.bringup",
+          "status": "passed",
+          "duration_seconds": 25.00133548863232,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 2,
+          "kind": "ros_graph.readiness",
+          "status": "passed",
+          "duration_seconds": 1.357921089977026,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 3,
+          "kind": "nav2.readiness",
+          "status": "passed",
+          "duration_seconds": 0.5292058419436216,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 4,
+          "kind": "navigation_data.readiness",
+          "status": "passed",
+          "duration_seconds": 4.76714426651597,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 5,
+          "kind": "wait_for_nav2_active",
+          "status": "passed",
+          "duration_seconds": 0.2502998784184456,
+          "failure_reason": null,
+          "time_offset_seconds": 31.65568623971194
+        },
+        {
+          "index": 6,
+          "kind": "set_initial_pose",
+          "status": "passed",
+          "duration_seconds": 1.627524621784687,
+          "failure_reason": null,
+          "time_offset_seconds": 31.906001136638224
+        },
+        {
+          "index": 7,
+          "kind": "send_goal",
+          "status": "passed",
+          "duration_seconds": 0.06168108992278576,
+          "failure_reason": null,
+          "time_offset_seconds": 33.533536836504936
+        },
+        {
+          "index": 8,
+          "kind": "expect_goal_reached",
+          "status": "passed",
+          "duration_seconds": 3.1894972138106823,
+          "failure_reason": null,
+          "time_offset_seconds": 33.59523056913167
+        }
+      ],
+      "assertions": [
+        {
+          "index": 0,
+          "kind": "collision_free",
+          "status": "skipped",
+          "message": "Required metric is not available: collision_free",
+          "severity": "error",
+          "metric": "collision_free",
+          "actual": null,
+          "expected": null
+        },
+        {
+          "index": 1,
+          "kind": "goal_reached",
+          "status": "passed",
+          "message": "Goal reached.",
+          "severity": "error",
+          "metric": "goal_reached",
+          "actual": true,
+          "expected": true
+        },
+        {
+          "index": 2,
+          "kind": "travel_time",
+          "status": "passed",
+          "message": "travel_time=3.1895 is within max 30.",
+          "severity": "error",
+          "metric": "travel_time",
+          "actual": 3.189502162858844,
+          "expected": 30.0
+        },
+        {
+          "index": 3,
+          "kind": "path_length",
+          "status": "passed",
+          "message": "path_length_traveled=1.13666 is within max 3.",
+          "severity": "error",
+          "metric": "path_length_traveled",
+          "actual": 1.136660398854831,
+          "expected": 3.0
+        },
+        {
+          "index": 4,
+          "kind": "recovery_count",
+          "status": "skipped",
+          "message": "Required metric is not available: recovery_count",
+          "severity": "error",
+          "metric": "recovery_count",
+          "actual": null,
+          "expected": null
+        }
+      ],
+      "metrics": {
+        "simulator_started": true,
+        "simulator_backend": "gazebo_sim",
+        "preflight_skipped": true,
+        "error_type": "",
+        "artifact_dir": "/out/reports/straight_line/artifacts/straight_line",
+        "gazebo_log": "/out/reports/straight_line/artifacts/straight_line/gazebo.log",
+        "scenario_copy": "/out/reports/straight_line/artifacts/straight_line/scenario.yaml",
+        "metadata": "/out/reports/straight_line/artifacts/straight_line/metadata.json",
+        "world": "/opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "simulator_log": "/out/reports/straight_line/artifacts/straight_line/gazebo.log",
+        "clock_requested": false,
+        "nav2_executed": true,
+        "nav2_status": "passed",
+        "launch_scenario_stack": true,
+        "launch_stack_started": true,
+        "launch_process_count": 1,
+        "ros_graph_requested": true,
+        "nav2_readiness_requested": true,
+        "navigation_data_requested": true,
+        "world_reset_requested": false,
+        "execute_simulator_steps": false,
+        "contact_collection_requested": false,
+        "ros_graph_ready": true,
+        "ros_graph_wait_seconds": 1.357921,
+        "ros_graph_timeout": 90.0,
+        "ros_graph_commands": "ros2 node list; ros2 topic list",
+        "ros_graph_error": "",
+        "nav2_ready": true,
+        "nav2_wait_seconds": 0.529206,
+        "nav2_timeout": 180.0,
+        "nav2_error": "",
+        "navigation_data_ready": true,
+        "navigation_data_wait_seconds": 4.767144,
+        "navigation_data_timeout": 180.0,
+        "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
+        "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
+        "navigation_data_error": "",
+        "nav2_bringup_log": "/out/reports/straight_line/artifacts/straight_line/nav2_bringup.log",
+        "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "travel_time": 3.189502162858844,
+        "travel_time.ahead": 3.189502162858844,
+        "goal_reached": true,
+        "path_length_traveled": 1.136660398854831,
+        "path_length_traveled.ahead": 1.136660398854831,
+        "replanning_count": 3,
+        "replanning_count.ahead": 3,
+        "trajectory": [
+          {
+            "x": 2.237190711185015e-07,
+            "y": 3.3227224807886235e-16
+          },
+          {
+            "x": 0.021429691201721713,
+            "y": 2.0270866634911845e-05
+          },
+          {
+            "x": 0.04149359381948529,
+            "y": 0.00012023828643710529
+          },
+          {
+            "x": 0.06658736564402519,
+            "y": 0.0004018579014045355
+          },
+          {
+            "x": 0.0959072295358937,
+            "y": 0.0009386221700591167
+          },
+          {
+            "x": 0.11707314594324018,
+            "y": 0.0014535776498088193
+          },
+          {
+            "x": 0.14029080288811846,
+            "y": 0.002129306698366179
+          },
+          {
+            "x": 0.16488838197830002,
+            "y": 0.002942275069980274
+          },
+          {
+            "x": 0.1912729083447344,
+            "y": 0.003886049653704675
+          },
+          {
+            "x": 0.21846621229659263,
+            "y": 0.004909115190332236
+          },
+          {
+            "x": 0.24690742047568573,
+            "y": 0.006014534925269459
+          },
+          {
+            "x": 0.27623852383785685,
+            "y": 0.007173383242519243
+          },
+          {
+            "x": 0.3066704744928389,
+            "y": 0.008368198237071444
+          },
+          {
+            "x": 0.33814263490609553,
+            "y": 0.009576701798528238
+          },
+          {
+            "x": 0.3702518018508462,
+            "y": 0.010758857464127556
+          },
+          {
+            "x": 0.40301386936454814,
+            "y": 0.011906319469624187
+          },
+          {
+            "x": 0.43608639988353914,
+            "y": 0.012993791145685257
+          },
+          {
+            "x": 0.4691909511617693,
+            "y": 0.014005010723967782
+          },
+          {
+            "x": 0.5022979236604949,
+            "y": 0.014933529793768495
+          },
+          {
+            "x": 0.5354070329193605,
+            "y": 0.01578254697106219
+          },
+          {
+            "x": 0.5685179998530826,
+            "y": 0.016555676641057004
+          },
+          {
+            "x": 0.6016308409671669,
+            "y": 0.017243821418500793
+          },
+          {
+            "x": 0.6347453278619895,
+            "y": 0.017847559715031887
+          },
+          {
+            "x": 0.6678614152299402,
+            "y": 0.018355926386675065
+          },
+          {
+            "x": 0.7009787212708694,
+            "y": 0.018777631723221885
+          },
+          {
+            "x": 0.7339946973353177,
+            "y": 0.019116146036467555
+          },
+          {
+            "x": 0.7663239097191364,
+            "y": 0.019394298547887014
+          },
+          {
+            "x": 0.7980582954165464,
+            "y": 0.01963592638303707
+          },
+          {
+            "x": 0.8288455705379884,
+            "y": 0.019865902759984747
+          },
+          {
+            "x": 0.8586940073811654,
+            "y": 0.020103101413121223
+          },
+          {
+            "x": 0.8876990962743259,
+            "y": 0.020364414168631263
+          },
+          {
+            "x": 0.9163269706164657,
+            "y": 0.020648273018874723
+          },
+          {
+            "x": 0.9448340098776333,
+            "y": 0.02095714959983701
+          },
+          {
+            "x": 0.9724425072036115,
+            "y": 0.021276556538996835
+          },
+          {
+            "x": 0.9994609800161174,
+            "y": 0.021609516537086388
+          },
+          {
+            "x": 1.025727263442835,
+            "y": 0.021955508766681647
+          },
+          {
+            "x": 1.0513313613157373,
+            "y": 0.022323973194820334
+          },
+          {
+            "x": 1.0765132902869692,
+            "y": 0.02272662709565924
+          },
+          {
+            "x": 1.100897252979772,
+            "y": 0.023157630314766052
+          },
+          {
+            "x": 1.124787294719766,
+            "y": 0.023619265260545124
+          }
+        ],
+        "trajectory_point_count": 40
+      }
+    },
+    {
+      "scenario_id": "u_turn",
+      "name": "u_turn",
+      "path": "/opt/nav2_scenario_runner/examples/benchmark/scenarios/u_turn.yaml",
+      "tags": [
+        "benchmark",
+        "diff_drive",
+        "navigation"
+      ],
+      "status": "passed",
+      "step_count": 5,
+      "assertion_count": 5,
+      "duration_seconds": 41.0924937594682,
+      "failure_reason": null,
+      "steps": [
+        {
+          "index": 0,
+          "kind": "gazebo_sim.launch",
+          "status": "passed",
+          "duration_seconds": 25.00131652969867,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 1,
+          "kind": "nav2.bringup",
+          "status": "passed",
+          "duration_seconds": 25.001295880414546,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 2,
+          "kind": "ros_graph.readiness",
+          "status": "passed",
+          "duration_seconds": 1.3513576602563262,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 3,
+          "kind": "nav2.readiness",
+          "status": "passed",
+          "duration_seconds": 0.4322558967396617,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 4,
+          "kind": "navigation_data.readiness",
+          "status": "passed",
+          "duration_seconds": 5.481639568693936,
+          "failure_reason": null,
+          "time_offset_seconds": null
+        },
+        {
+          "index": 5,
+          "kind": "wait_for_nav2_active",
+          "status": "passed",
+          "duration_seconds": 0.25047015957534313,
+          "failure_reason": null,
+          "time_offset_seconds": 32.26662525348365
+        },
+        {
+          "index": 6,
+          "kind": "set_initial_pose",
+          "status": "passed",
+          "duration_seconds": 1.6387572661042213,
+          "failure_reason": null,
+          "time_offset_seconds": 32.517111506313086
+        },
+        {
+          "index": 7,
+          "kind": "send_goal",
+          "status": "passed",
+          "duration_seconds": 0.06167243514209986,
+          "failure_reason": null,
+          "time_offset_seconds": 34.155880629085004
+        },
+        {
+          "index": 8,
+          "kind": "expect_goal_reached",
+          "status": "passed",
+          "duration_seconds": 6.539819277822971,
+          "failure_reason": null,
+          "time_offset_seconds": 34.21756064426154
+        }
+      ],
+      "assertions": [
+        {
+          "index": 0,
+          "kind": "collision_free",
+          "status": "skipped",
+          "message": "Required metric is not available: collision_free",
+          "severity": "error",
+          "metric": "collision_free",
+          "actual": null,
+          "expected": null
+        },
+        {
+          "index": 1,
+          "kind": "goal_reached",
+          "status": "passed",
+          "message": "Goal reached.",
+          "severity": "error",
+          "metric": "goal_reached",
+          "actual": true,
+          "expected": true
+        },
+        {
+          "index": 2,
+          "kind": "travel_time",
+          "status": "passed",
+          "message": "travel_time=6.53981 is within max 60.",
+          "severity": "error",
+          "metric": "travel_time",
+          "actual": 6.539812995120883,
+          "expected": 60.0
+        },
+        {
+          "index": 3,
+          "kind": "path_length",
+          "status": "passed",
+          "message": "path_length_traveled=1.33691 is within max 4.",
+          "severity": "error",
+          "metric": "path_length_traveled",
+          "actual": 1.3369129015572787,
+          "expected": 4.0
+        },
+        {
+          "index": 4,
+          "kind": "recovery_count",
+          "status": "skipped",
+          "message": "Required metric is not available: recovery_count",
+          "severity": "error",
+          "metric": "recovery_count",
+          "actual": null,
+          "expected": null
+        }
+      ],
+      "metrics": {
+        "simulator_started": true,
+        "simulator_backend": "gazebo_sim",
+        "preflight_skipped": true,
+        "error_type": "",
+        "artifact_dir": "/out/reports/u_turn/artifacts/u_turn",
+        "gazebo_log": "/out/reports/u_turn/artifacts/u_turn/gazebo.log",
+        "scenario_copy": "/out/reports/u_turn/artifacts/u_turn/scenario.yaml",
+        "metadata": "/out/reports/u_turn/artifacts/u_turn/metadata.json",
+        "world": "/opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "simulator_log": "/out/reports/u_turn/artifacts/u_turn/gazebo.log",
+        "clock_requested": false,
+        "nav2_executed": true,
+        "nav2_status": "passed",
+        "launch_scenario_stack": true,
+        "launch_stack_started": true,
+        "launch_process_count": 1,
+        "ros_graph_requested": true,
+        "nav2_readiness_requested": true,
+        "navigation_data_requested": true,
+        "world_reset_requested": false,
+        "execute_simulator_steps": false,
+        "contact_collection_requested": false,
+        "ros_graph_ready": true,
+        "ros_graph_wait_seconds": 1.351358,
+        "ros_graph_timeout": 90.0,
+        "ros_graph_commands": "ros2 node list; ros2 topic list",
+        "ros_graph_error": "",
+        "nav2_ready": true,
+        "nav2_wait_seconds": 0.432256,
+        "nav2_timeout": 180.0,
+        "nav2_error": "",
+        "navigation_data_ready": true,
+        "navigation_data_wait_seconds": 5.48164,
+        "navigation_data_timeout": 180.0,
+        "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
+        "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
+        "navigation_data_error": "",
+        "nav2_bringup_log": "/out/reports/u_turn/artifacts/u_turn/nav2_bringup.log",
+        "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
+        "travel_time": 6.539812995120883,
+        "travel_time.turn_around": 6.539812995120883,
+        "goal_reached": true,
+        "path_length_traveled": 1.3369129015572787,
+        "path_length_traveled.turn_around": 1.3369129015572787,
+        "replanning_count": 6,
+        "replanning_count.turn_around": 6,
+        "trajectory": [
+          {
+            "x": 2.2371907111849833e-07,
+            "y": 3.322722480788525e-16
+          },
+          {
+            "x": 0.021795110709681598,
+            "y": 5.842454055019759e-06
+          },
+          {
+            "x": 0.041895747206949774,
+            "y": 2.1146087749382796e-05
+          },
+          {
+            "x": 0.0671196035865837,
+            "y": 0.00011855461395557597
+          },
+          {
+            "x": 0.09644235237983233,
+            "y": 0.0003634449249087215
+          },
+          {
+            "x": 0.11818032013136073,
+            "y": 0.0006384562871212678
+          },
+          {
+            "x": 0.14124099149407476,
+            "y": 0.0010112226527728562
+          },
+          {
+            "x": 0.16594263345909388,
+            "y": 0.001480267253907477
+          },
+          {
+            "x": 0.19232934262567425,
+            "y": 0.0020459696888018328
+          },
+          {
+            "x": 0.21959648353831804,
+            "y": 0.0027050798337334486
+          },
+          {
+            "x": 0.24816680013089604,
+            "y": 0.0034941295221322805
+          },
+          {
+            "x": 0.2774819691037358,
+            "y": 0.00440848241006323
+          },
+          {
+            "x": 0.3076257153912274,
+            "y": 0.005351050843755974
+          },
+          {
+            "x": 0.3385486986286056,
+            "y": 0.006230275983084134
+          },
+          {
+            "x": 0.3700594177008478,
+            "y": 0.006980006072985577
+          },
+          {
+            "x": 0.4017603476610557,
+            "y": 0.007563110795467052
+          },
+          {
+            "x": 0.4334379877223363,
+            "y": 0.00795121023629945
+          },
+          {
+            "x": 0.4649805470322771,
+            "y": 0.008131897983764746
+          },
+          {
+            "x": 0.496540768709146,
+            "y": 0.008095414578486547
+          },
+          {
+            "x": 0.5280499840899378,
+            "y": 0.007853858048129542
+          },
+          {
+            "x": 0.559086536271572,
+            "y": 0.007422751847599014
+          },
+          {
+            "x": 0.5899435203622172,
+            "y": 0.006802629295465114
+          },
+          {
+            "x": 0.6202855611652656,
+            "y": 0.006007189483662859
+          },
+          {
+            "x": 0.6504066693832621,
+            "y": 0.005033126178690484
+          },
+          {
+            "x": 0.6799517835224469,
+            "y": 0.00391576904787743
+          },
+          {
+            "x": 0.7091527472745537,
+            "y": 0.002673658519898776
+          },
+          {
+            "x": 0.737970547318241,
+            "y": 0.0013420117469229633
+          },
+          {
+            "x": 0.7660573906462965,
+            "y": -6.033061175667264e-05
+          },
+          {
+            "x": 0.7933036944888977,
+            "y": -0.0015601481200241
+          },
+          {
+            "x": 0.8196451886379882,
+            "y": -0.0031892415953325604
+          },
+          {
+            "x": 0.8451014230872993,
+            "y": -0.005015646917534344
+          },
+          {
+            "x": 0.8698880966929111,
+            "y": -0.007095886361005719
+          },
+          {
+            "x": 0.8941583930072794,
+            "y": -0.009495045164749404
+          },
+          {
+            "x": 0.9171631456926802,
+            "y": -0.01216924423301846
+          },
+          {
+            "x": 0.9393166078126185,
+            "y": -0.015193209898126073
+          },
+          {
+            "x": 0.9605186628401695,
+            "y": -0.018581068926347966
+          },
+          {
+            "x": 0.9809423598400078,
+            "y": -0.022369867917882647
+          },
+          {
+            "x": 1.0007261342641691,
+            "y": -0.026614054643637558
+          },
+          {
+            "x": 1.0286763463376827,
+            "y": -0.03373413560131833
+          },
+          {
+            "x": 1.0541829016048592,
+            "y": -0.04163829593700415
+          },
+          {
+            "x": 1.0768097707938298,
+            "y": -0.05008034119523303
+          },
+          {
+            "x": 1.095672998504069,
+            "y": -0.058504036252808096
+          },
+          {
+            "x": 1.1160847579715785,
+            "y": -0.06963248207630826
+          },
+          {
+            "x": 1.1345441394388582,
+            "y": -0.08257242374999685
+          },
+          {
+            "x": 1.1492271332102362,
+            "y": -0.09711261577981427
+          },
+          {
+            "x": 1.1461707947153563,
+            "y": -0.07602980963884234
+          },
+          {
+            "x": 1.148123748596115,
+            "y": -0.05593993530983661
+          },
+          {
+            "x": 1.153645545375746,
+            "y": -0.03651457721762351
+          },
+          {
+            "x": 1.1622602497660037,
+            "y": -0.01798443652982643
+          },
+          {
+            "x": 1.1753908699658737,
+            "y": 0.0010756656485799566
+          },
+          {
+            "x": 1.18979020266078,
+            "y": 0.01572615437126889
+          },
+          {
+            "x": 1.2070460653772195,
+            "y": 0.0278044123047917
+          }
+        ],
+        "trajectory_point_count": 52
+      }
+    }
+  ]
+}
