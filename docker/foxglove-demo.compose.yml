@@ -1,0 +1,13 @@
+# OSS Lichtblick viewer for Nav2 demo capture.
+#
+# Usage (from repo root):
+#   docker compose -f docker/foxglove-demo.compose.yml up -d lichtblick
+#
+# Open (after foxglove_bridge is running on the host/container network):
+#   http://localhost:8080/?ds=foxglove-websocket&ds.url=ws://127.0.0.1:8765
+services:
+  lichtblick:
+    image: ghcr.io/lichtblick-suite/lichtblick@sha256:ebaff0942173dc42c221ec0cc14d2bd7e6591e27c16cd11c8b2e557ce8da28d9
+    network_mode: host
+    volumes:
+      - ../docs/assets/foxglove-nav2-layout.json:/lichtblick/default-layout.json:ro

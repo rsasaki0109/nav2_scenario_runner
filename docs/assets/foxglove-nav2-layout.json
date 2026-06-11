@@ -1,0 +1,125 @@
+{
+  "configById": {
+    "3D!nav2tb3": {
+      "cameraState": {
+        "perspective": true,
+        "distance": 9.5,
+        "phi": 72,
+        "thetaOffset": 0,
+        "target": [0, 0, 0],
+        "targetOffset": [0, 0.5, 0],
+        "targetOrientation": [0, 0, 0, 1],
+        "fovy": 45,
+        "near": 0.05,
+        "far": 200
+      },
+      "followMode": "follow-pose",
+      "followTf": "map",
+      "scene": {
+        "enableStats": false,
+        "backgroundColor": "#1a1a1a",
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {
+        "showLabel": false,
+        "editable": false,
+        "frame:map": { "visible": false },
+        "frame:odom": { "visible": false },
+        "frame:base_footprint": { "visible": false },
+        "frame:base_link": { "visible": true }
+      },
+      "topics": {
+        "/map": {
+          "visible": true,
+          "colorField": "value",
+          "colorMode": "gradient",
+          "colorMap": "turbo",
+          "gradient": ["#ffffff", "#000000"],
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/global_costmap/costmap": {
+          "visible": true,
+          "colorField": "value",
+          "colorMode": "gradient",
+          "colorMap": "turbo",
+          "gradient": ["#00000000", "#ff6600cc"],
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/local_costmap/costmap": {
+          "visible": true,
+          "colorField": "value",
+          "colorMode": "gradient",
+          "colorMap": "turbo",
+          "gradient": ["#00000000", "#00ccffaa"],
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/scan": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "flat",
+          "flatColor": "#00ff88ff",
+          "pointSize": 2
+        },
+        "/plan": {
+          "visible": true,
+          "colorField": "z",
+          "colorMode": "flat",
+          "flatColor": "#ff3366ff",
+          "lineWidth": 0.08
+        },
+        "/local_plan": {
+          "visible": true,
+          "colorField": "z",
+          "colorMode": "flat",
+          "flatColor": "#ffcc00ff",
+          "lineWidth": 0.05
+        },
+        "/goal_pose": {
+          "visible": true,
+          "colorField": "z",
+          "colorMode": "flat",
+          "flatColor": "#ff00ffff"
+        },
+        "/robot_description": {
+          "visible": true
+        }
+      },
+      "layers": {
+        "nav2-grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "nav2-grid",
+          "layerId": "foxglove.Grid",
+          "frameId": "map",
+          "size": 6,
+          "divisions": 12,
+          "lineWidth": 1,
+          "color": "#248eff80",
+          "position": [0, 0, 0.01],
+          "rotation": [0, 0, 0],
+          "order": 1
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/goal_pose",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": "3D!nav2tb3"
+}

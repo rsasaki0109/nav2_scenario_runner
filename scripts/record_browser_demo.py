@@ -40,6 +40,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--width", type=int, default=1440, help="Browser viewport width.")
     parser.add_argument("--height", type=int, default=900, help="Browser viewport height.")
     parser.add_argument(
+        "--crop-left",
+        type=int,
+        default=0,
+        help="Pixels to crop from the left edge before GIF scaling.",
+    )
+    parser.add_argument(
         "--wait-before",
         type=float,
         default=2.0,
@@ -51,10 +57,25 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="Optional CSS selector that must appear before recording starts.",
     )
     parser.add_argument(
+        "--click",
+        action="append",
+        default=[],
+        metavar="X,Y",
+        help="Viewport coordinate to click after loading and before recording. May be repeated.",
+    )
+    parser.add_argument(
         "--browser",
         choices=["chromium", "firefox", "webkit"],
         default="chromium",
         help="Playwright browser engine.",
+    )
+    parser.add_argument(
+        "--software-webgl",
+        action="store_true",
+        help=(
+            "Launch Chromium with SwiftShader software WebGL flags for headless "
+            "3D panel capture."
+        ),
     )
     parser.add_argument(
         "--keep-frames",
@@ -95,11 +116,24 @@ async def _record(args: argparse.Namespace) -> None:
     try:
         async with async_playwright() as playwright:
             browser_launcher = getattr(playwright, args.browser)
-            browser = await browser_launcher.launch(headless=True)
+            launch_kwargs: dict = {"headless": True}
+            if args.software_webgl:
+                if args.browser != "chromium":
+                    raise ValueError("--software-webgl requires --browser chromium.")
+                launch_kwargs["args"] = [
+                    "--use-gl=angle",
+                    "--use-angle=swiftshader",
+                    "--enable-unsafe-swiftshader",
+                    "--ignore-gpu-blocklist",
+                ]
+            browser = await browser_launcher.launch(**launch_kwargs)
             page = await browser.new_page(viewport={"width": args.width, "height": args.height})
             await page.goto(args.url, wait_until="networkidle")
             if args.wait_for_selector:
                 await page.wait_for_selector(args.wait_for_selector, timeout=30000)
+            for click in args.click:
+                x_text, y_text = click.split(",", maxsplit=1)
+                await page.mouse.click(float(x_text), float(y_text))
             if args.wait_before > 0:
                 await page.wait_for_timeout(int(args.wait_before * 1000))
 
@@ -109,17 +143,20 @@ async def _record(args: argparse.Namespace) -> None:
                     await page.wait_for_timeout(int(1000 / args.fps))
             await browser.close()
 
-        _encode_gif(frame_dir=frame_dir, output=output, fps=args.fps)
+        _encode_gif(frame_dir=frame_dir, output=output, fps=args.fps, crop_left=args.crop_left)
     finally:
         if cleanup is not None:
             cleanup.cleanup()
 
 
-def _encode_gif(frame_dir: Path, output: Path, fps: int) -> None:
+def _encode_gif(frame_dir: Path, output: Path, fps: int, crop_left: int = 0) -> None:
     input_pattern = str(frame_dir / "frame_%05d.png")
     palette = frame_dir / "palette.png"
-    palette_filter = f"fps={fps},scale=960:-1:flags=lanczos,palettegen"
-    gif_filter = f"fps={fps},scale=960:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer"
+    if crop_left < 0:
+        raise ValueError("--crop-left must be non-negative.")
+    crop_filter = f"crop=iw-{crop_left}:ih:{crop_left}:0," if crop_left else ""
+    palette_filter = f"fps={fps},{crop_filter}scale=960:-1:flags=lanczos,palettegen"
+    gif_filter = f"fps={fps},{crop_filter}scale=960:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer"
 
     subprocess.run(
         [

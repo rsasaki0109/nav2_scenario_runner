@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ros-jazzy-navigation2 \
       ros-jazzy-nav2-bringup \
       ros-jazzy-nav2-minimal-tb3-sim \
+      ros-jazzy-foxglove-bridge \
       ros-jazzy-ros-gz \
       ros-jazzy-rmw-cyclonedds-cpp \
     && rm -rf /var/lib/apt/lists/*
