@@ -1,44 +1,30 @@
 # Demo Capture
 
-Use a real Nav2/Gazebo run for the README demo. Do not commit synthetic or toy recordings.
+Use a real Nav2/Gazebo Sim run for the README demo. Do not commit synthetic or
+toy recordings.
 
-The repository includes a Playwright-based browser recorder:
+The default capture path is OSS-first:
 
-```bash
-python3 scripts/record_browser_demo.py \
-  --url http://localhost:8080 \
-  --output docs/assets/nav2-scenario-runner-demo.gif \
-  --duration 12 \
-  --fps 8 \
-  --width 1440 \
-  --height 900
-```
+- Nav2 + Gazebo Sim run in the local Jazzy Docker image.
+- `foxglove_bridge` publishes the ROS graph over Foxglove WebSocket.
+- Lichtblick, the open-source Foxglove Studio fork, renders the scene locally.
+- Playwright records the browser with software WebGL enabled.
 
 ## Requirements
 
-- A real browser target, for example a generated `nav2_scenario_runner` HTML report or a logged-in Foxglove Studio web session connected to a Nav2/Gazebo run.
+- Docker
+- `ffmpeg`
 - `python3 -m pip install playwright`
 - `python3 -m playwright install chromium`
-- `ffmpeg`
-- For the bundled Nav2 TurtleBot3 demo capture script:
-  - ROS 2 Humble
-  - Gazebo Classic setup at `/usr/share/gazebo/setup.sh`
-  - `nav2_bringup`
-  - Gazebo Classic `gzserver`
-  - `gazebo_ros`
-  - `turtlebot3_gazebo`
-  - `turtlebot3_description`
-
-On Ubuntu 22.04 with ROS 2 Humble, the missing demo packages are usually:
+- The benchmark image built locally:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y gazebo ros-humble-gazebo-ros-pkgs ros-humble-turtlebot3-gazebo ros-humble-turtlebot3-description
+docker build -t nav2-scenario-runner:jazzy-gazebo -f docker/Dockerfile .
 ```
 
-## One-Command Nav2 Demo Capture
+## One-Command OSS Capture
 
-After the packages above are installed, run:
+Run from the repository root:
 
 ```bash
 scripts/record_nav2_foxglove_demo.sh
@@ -46,20 +32,16 @@ scripts/record_nav2_foxglove_demo.sh
 
 The script starts:
 
-- `nav2_bringup`'s TurtleBot3 simulation in headless Gazebo Classic
-- a temporary `nav2_scenario_runner --mode attach` scenario that sends a short real Nav2 goal
-- the Playwright browser recorder against the generated HTML report, including metrics and the sampled `/odom` trajectory
-
-By default the script runs in `ROS_DOMAIN_ID=42` to avoid mixing with any existing ROS graph on the machine. Override it when needed:
-
-```bash
-ROS_DOMAIN_ID=43 scripts/record_nav2_foxglove_demo.sh
-```
+- the pinned Lichtblick container on `http://127.0.0.1:8080`
+- the real Jazzy + `gz sim` `tb3_sandbox` stack in Docker
+- `foxglove_bridge` on `ws://127.0.0.1:8765`
+- one attach-mode `nav2_scenario_runner` goal timed to the recording window
+- the Playwright GIF recorder against the Lichtblick 3D canvas
 
 Default output:
 
 ```text
-docs/assets/nav2-scenario-runner-demo.gif
+docs/assets/nav2-foxglove-demo.gif
 ```
 
 Logs and generated reports are written under:
@@ -71,43 +53,51 @@ reports/demo-capture/
 Useful overrides:
 
 ```bash
-OUTPUT=/tmp/demo.gif DURATION=20 FPS=8 scripts/record_nav2_foxglove_demo.sh
+OUTPUT=/tmp/nav2-foxglove.gif DURATION=10 FPS=8 scripts/record_nav2_foxglove_demo.sh
+ROS_DOMAIN_ID=72 GZ_PARTITION=foxglove_demo_72 scripts/record_nav2_foxglove_demo.sh
+LICHTBLICK_PORT=8081 BRIDGE_PORT=8766 scripts/record_nav2_foxglove_demo.sh
+GOAL_X=0.7 GOAL_Y=0.5 GOAL_YAW=0.0 GOAL_NAME=ahead scripts/record_nav2_foxglove_demo.sh
 ```
 
-## Optional Foxglove Capture
+The committed layout lives at:
 
-Foxglove Studio web may require sign-in. If you have a logged-in browser target connected to `foxglove_bridge`, record that URL explicitly:
+```text
+docs/assets/foxglove-nav2-layout.json
+```
+
+It is mounted into the Lichtblick container so repeated captures use the same 3D
+panel, camera, map, costmaps, plan, laser scan, and robot TF settings.
+
+## WebGL Notes
+
+`scripts/record_browser_demo.py` accepts `--software-webgl`, which launches
+Chromium with SwiftShader flags:
 
 ```bash
 python3 scripts/record_browser_demo.py \
-  --url "https://app.foxglove.dev/~/view?ds=foxglove-websocket&ds.url=ws%3A%2F%2Flocalhost%3A8765" \
-  --output docs/assets/nav2-scenario-runner-demo.gif \
+  --url "http://127.0.0.1:8080/?ds=foxglove-websocket&ds.url=ws%3A%2F%2F127.0.0.1%3A8765" \
+  --output docs/assets/nav2-foxglove-demo.gif \
   --duration 12 \
-  --fps 8
+  --fps 8 \
+  --crop-left 240 \
+  --wait-for-selector canvas \
+  --click 228,56 \
+  --software-webgl
 ```
 
-For a live Foxglove capture, record the dynamic obstacle scenario, not a dry-run or mock animation:
+Keep the GIF short, usually 8-15 seconds and about 3 MB or less for README use.
+This capture is intentionally local/manual because it depends on Docker,
+Gazebo, WebGL, and browser timing. It should not become a required CI gate.
 
-1. Start the real Nav2/Gazebo scenario stack.
-2. Open Foxglove Studio in a browser and connect it to the robot/simulation data.
-3. Arrange panels so the viewer can see the map, robot pose, planned path, and obstacle movement.
-4. Run `nav2_scenario_runner` for `examples/turtlebot3_gazebo/dynamic_obstacle.yaml`.
-5. Capture the Foxglove browser window with `scripts/record_browser_demo.py`.
-6. Keep the GIF short, ideally 8-15 seconds, and under a few MB when possible.
+## Fallbacks
 
-Once the GIF exists, add this near the top of `README.md`:
+If headless Chromium renders a black 3D panel, use the highest working fallback:
 
-```md
-<p align="center">
-  <img src="docs/assets/nav2-scenario-runner-demo.gif"
-       alt="nav2_scenario_runner report from a real Nav2 TurtleBot3 scenario in Gazebo"
-       width="900">
-</p>
-```
+1. Lichtblick web + Chromium + SwiftShader (`--software-webgl`).
+2. Lichtblick web under `xvfb` with Chromium.
+3. Lichtblick Map/Plot/Image panels without 3D.
+4. Lichtblick desktop under `xvfb` captured with `ffmpeg x11grab`.
 
-## Notes
-
-- Playwright records browser content. It will not capture desktop RViz/Gazebo windows directly.
-- For desktop GUI capture, use a native screen recorder and keep the same "real run only" rule.
-- If Foxglove is served on another port, pass that URL to `--url`.
-- Use `--wait-for-selector` when the target page needs a specific panel to finish loading before capture starts.
+Archived Foxglove Studio can use the same bridge URL and layout format for
+manual experiments, but the reproducible project path is the pinned Lichtblick
+container. No foxglove.dev account is required.

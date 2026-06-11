@@ -17,16 +17,14 @@ Scenario-as-Code test runner for Nav2. Run repeatable navigation regression test
 Project site: <https://rsasaki0109.github.io/nav2_scenario_runner/>
 
 <p align="center">
-  <a href="https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark">
-    <img src="docs/assets/benchmark-viewer.gif"
-         alt="Interactive Nav2 benchmark explorer: toggle planners and scrub the robot along each recorded trajectory"
-         width="900">
-  </a>
+  <img src="docs/assets/nav2-foxglove-demo.gif"
+       alt="OSS Lichtblick visualization of a real Nav2 TurtleBot3 run in Gazebo Sim with map, costmaps, path, and laser scan"
+       width="900">
 </p>
 
 <p align="center">
-  <b><a href="https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark">▶ Try the interactive benchmark explorer ›</a></b>
-  &nbsp;·&nbsp; toggle planners, switch scenarios, and scrub the robot along every recorded trajectory.
+  <b>Real Nav2 + Gazebo Sim, viewed through OSS Lichtblick.</b>
+  &nbsp;·&nbsp; no hosted Foxglove login, no synthetic frames.
 </p>
 
 <p align="center">
@@ -41,12 +39,19 @@ nav2_scenario_runner run examples/turtlebot3_gazebo/smoke.yaml
 `nav2_scenario_runner` also captures a report straight from a real Nav2/Gazebo run, including metrics and a generated `/odom` trajectory view, not a toy animation:
 
 <p align="center">
-  <img src="docs/assets/nav2-scenario-runner-demo.gif"
-       alt="nav2_scenario_runner report from a real Nav2 TurtleBot3 scenario in Gazebo"
-       width="760">
+  <a href="https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark">
+    <img src="docs/assets/benchmark-viewer.gif"
+         alt="Interactive Nav2 benchmark explorer: toggle planners and scrub the robot along each recorded trajectory"
+         width="760">
+  </a>
 </p>
 
-See [docs/demo-capture.md](docs/demo-capture.md) for the Playwright recorder workflow and `scripts/record_nav2_foxglove_demo.sh`.
+<p align="center">
+  <b><a href="https://rsasaki0109.github.io/nav2_scenario_runner/#benchmark">▶ Try the interactive benchmark explorer ›</a></b>
+  &nbsp;·&nbsp; toggle planners, switch scenarios, and scrub the robot along every recorded trajectory.
+</p>
+
+See [docs/demo-capture.md](docs/demo-capture.md) for the OSS Lichtblick capture workflow and `scripts/record_nav2_foxglove_demo.sh`.
 
 Current scaffold usage from a source checkout:
 
