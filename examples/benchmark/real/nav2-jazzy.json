@@ -1,6 +1,6 @@
 {
   "runner_version": "0.1.0",
-  "generated_at": "2026-07-13T08:57:58.718957+00:00",
+  "generated_at": "2026-07-20T08:47:34.548978+00:00",
   "mode": "gazebo_sim",
   "total": 3,
   "passed": 3,
@@ -18,14 +18,14 @@
       "status": "passed",
       "step_count": 5,
       "assertion_count": 5,
-      "duration_seconds": 41.95225723499999,
+      "duration_seconds": 48.717438813,
       "failure_reason": null,
       "steps": [
         {
           "index": 0,
           "kind": "gazebo_sim.launch",
           "status": "passed",
-          "duration_seconds": 25.00133168399998,
+          "duration_seconds": 25.001569401000012,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -33,7 +33,7 @@
           "index": 1,
           "kind": "nav2.bringup",
           "status": "passed",
-          "duration_seconds": 25.00129852499998,
+          "duration_seconds": 25.001549522999994,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -41,7 +41,7 @@
           "index": 2,
           "kind": "ros_graph.readiness",
           "status": "passed",
-          "duration_seconds": 1.3381046920000017,
+          "duration_seconds": 1.5284163319999777,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -49,7 +49,7 @@
           "index": 3,
           "kind": "nav2.readiness",
           "status": "passed",
-          "duration_seconds": 0.7295969269999887,
+          "duration_seconds": 0.830632683999994,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -57,7 +57,7 @@
           "index": 4,
           "kind": "navigation_data.readiness",
           "status": "passed",
-          "duration_seconds": 4.714576761999979,
+          "duration_seconds": 5.912205706999998,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -65,33 +65,33 @@
           "index": 5,
           "kind": "wait_for_nav2_active",
           "status": "passed",
-          "duration_seconds": 0.25033183599998665,
+          "duration_seconds": 0.25028081599998586,
           "failure_reason": null,
-          "time_offset_seconds": 31.78366884099995
+          "time_offset_seconds": 33.27290756900001
         },
         {
           "index": 6,
           "kind": "set_initial_pose",
           "status": "passed",
-          "duration_seconds": 1.6323279700000057,
+          "duration_seconds": 1.6282258720000016,
           "failure_reason": null,
-          "time_offset_seconds": 32.03401612999994
+          "time_offset_seconds": 33.523202231
         },
         {
           "index": 7,
           "kind": "send_goal",
           "status": "passed",
-          "duration_seconds": 0.06144708099998297,
+          "duration_seconds": 0.061770061999993686,
           "failure_reason": null,
-          "time_offset_seconds": 33.666355016999944
+          "time_offset_seconds": 35.151440576
         },
         {
           "index": 8,
           "kind": "expect_goal_reached",
           "status": "passed",
-          "duration_seconds": 7.889769548000004,
+          "duration_seconds": 8.249819344000002,
           "failure_reason": null,
-          "time_offset_seconds": 33.72780860799992
+          "time_offset_seconds": 35.213218412
         }
       ],
       "assertions": [
@@ -119,20 +119,20 @@
           "index": 2,
           "kind": "travel_time",
           "status": "passed",
-          "message": "travel_time=7.88976 is within max 60.",
+          "message": "travel_time=8.24982 is within max 60.",
           "severity": "error",
           "metric": "travel_time",
-          "actual": 7.889764410999987,
+          "actual": 8.249817719999982,
           "expected": 60.0
         },
         {
           "index": 3,
           "kind": "path_length",
           "status": "passed",
-          "message": "path_length_traveled=1.15086 is within max 4.",
+          "message": "path_length_traveled=1.20478 is within max 4.",
           "severity": "error",
           "metric": "path_length_traveled",
-          "actual": 1.1508625678922038,
+          "actual": 1.2047759148079962,
           "expected": 4.0
         },
         {
@@ -170,220 +170,232 @@
         "execute_simulator_steps": false,
         "contact_collection_requested": false,
         "ros_graph_ready": true,
-        "ros_graph_wait_seconds": 1.338105,
+        "ros_graph_wait_seconds": 1.528416,
         "ros_graph_timeout": 90.0,
         "ros_graph_commands": "ros2 node list; ros2 topic list",
         "ros_graph_error": "",
         "nav2_ready": true,
-        "nav2_wait_seconds": 0.729597,
+        "nav2_wait_seconds": 0.830633,
         "nav2_timeout": 180.0,
         "nav2_error": "",
         "navigation_data_ready": true,
-        "navigation_data_wait_seconds": 4.714577,
+        "navigation_data_wait_seconds": 5.912206,
         "navigation_data_timeout": 180.0,
         "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
         "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
         "navigation_data_error": "",
         "nav2_bringup_log": "/out/reports/narrow_corridor/artifacts/narrow_corridor/nav2_bringup.log",
         "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
-        "travel_time": 7.889764410999987,
-        "travel_time.through_gap": 7.889764410999987,
+        "travel_time": 8.249817719999982,
+        "travel_time.through_gap": 8.249817719999982,
         "goal_reached": true,
-        "path_length_traveled": 1.1508625678922038,
-        "path_length_traveled.through_gap": 1.1508625678922038,
-        "replanning_count": 7,
-        "replanning_count.through_gap": 7,
+        "path_length_traveled": 1.2047759148079962,
+        "path_length_traveled.through_gap": 1.2047759148079962,
+        "replanning_count": 8,
+        "replanning_count.through_gap": 8,
         "trajectory": [
           {
-            "x": 2.2371907111850193e-07,
-            "y": 3.3227224807886363e-16
+            "x": 2.2371907111849656e-07,
+            "y": 3.322722480788485e-16
           },
           {
-            "x": -0.02190085798368969,
-            "y": 0.00023480923728841892
+            "x": -0.02029198791633645,
+            "y": 0.00018379410157846787
           },
           {
-            "x": -0.04348635644662179,
-            "y": 0.0011471147377500894
+            "x": -0.041956872511665765,
+            "y": 0.0009377999594901188
           },
           {
-            "x": -0.02530344582543628,
-            "y": -0.012064824941603028
+            "x": -0.062173387684281815,
+            "y": 0.0026426421118968626
           },
           {
-            "x": -0.006511393602066196,
-            "y": -0.023946852571301767
+            "x": -0.04202384415493331,
+            "y": -0.006655204869525112
           },
           {
-            "x": 0.011187144957987777,
-            "y": -0.037155210385428884
+            "x": -0.023088122141992462,
+            "y": -0.01729020037265655
           },
           {
-            "x": 0.026810808221114885,
-            "y": -0.05059015935422396
+            "x": -0.003398065075455116,
+            "y": -0.03081228781897836
           },
           {
-            "x": 0.04189542504358841,
-            "y": -0.06599731662534655
+            "x": 0.014514317673393244,
+            "y": -0.04512092609972262
           },
           {
-            "x": 0.05440245357956191,
-            "y": -0.08422294590733544
+            "x": 0.0300436277038459,
+            "y": -0.05930069449475375
           },
           {
-            "x": 0.06337251233168312,
-            "y": -0.1028601856093056
+            "x": 0.04470785718131333,
+            "y": -0.07546044943472381
           },
           {
-            "x": 0.07122847485729958,
-            "y": -0.12442799995118188
+            "x": 0.05730135967967911,
+            "y": -0.09525655006786733
           },
           {
-            "x": 0.07682522757791148,
-            "y": -0.14398740126763038
+            "x": 0.06730339605174412,
+            "y": -0.11662727695987757
           },
           {
-            "x": 0.08190248852591402,
-            "y": -0.16665175902852014
+            "x": 0.07500443461046072,
+            "y": -0.13827421899992798
           },
           {
-            "x": 0.08617730361707454,
-            "y": -0.1923882136638368
+            "x": 0.08038378396710964,
+            "y": -0.1576950214785145
           },
           {
-            "x": 0.08936765243119871,
-            "y": -0.22104400823741369
+            "x": 0.08511041419972977,
+            "y": -0.17989932244009182
           },
           {
-            "x": 0.09078142049487214,
-            "y": -0.2413310798791591
+            "x": 0.08891534197328232,
+            "y": -0.20486312283882493
           },
           {
-            "x": 0.09160856456147722,
-            "y": -0.2625933269315602
+            "x": 0.09167289677850633,
+            "y": -0.2334360899571525
           },
           {
-            "x": 0.09181344656192762,
-            "y": -0.2848726809947786
+            "x": 0.09278527815406774,
+            "y": -0.2539694308373397
           },
           {
-            "x": 0.09140424610431244,
-            "y": -0.3078100759439396
+            "x": 0.09325784140193226,
+            "y": -0.27577833959505677
           },
           {
-            "x": 0.09037316009735072,
-            "y": -0.33159132999651963
+            "x": 0.09305071082741481,
+            "y": -0.29851099456593105
           },
           {
-            "x": 0.08876307128122701,
-            "y": -0.35566775515921906
+            "x": 0.092172530971919,
+            "y": -0.3226830415686955
           },
           {
-            "x": 0.08659157559154543,
-            "y": -0.3801845600027618
+            "x": 0.0906811784025932,
+            "y": -0.3476304550606734
           },
           {
-            "x": 0.08391323473158534,
-            "y": -0.4053428297615653
+            "x": 0.08864701909716842,
+            "y": -0.3730632794251447
           },
           {
-            "x": 0.08086906285441793,
-            "y": -0.4306108223849225
+            "x": 0.08615263339639839,
+            "y": -0.39872101802811327
           },
           {
-            "x": 0.07752905910618664,
-            "y": -0.45563071902928715
+            "x": 0.08332057336863817,
+            "y": -0.4241544177114242
           },
           {
-            "x": 0.07398053076780634,
-            "y": -0.48031621075621167
+            "x": 0.0801843350543199,
+            "y": -0.4495379844318719
           },
           {
-            "x": 0.07021856746955112,
-            "y": -0.5049291660075894
+            "x": 0.07678602410085685,
+            "y": -0.47491115668954315
           },
           {
-            "x": 0.06623114694808542,
-            "y": -0.5296302100715299
+            "x": 0.07319870556137129,
+            "y": -0.5001099309437014
           },
           {
-            "x": 0.06210266968643728,
-            "y": -0.5542340902262147
+            "x": 0.06950981961993684,
+            "y": -0.5248619445083894
           },
           {
-            "x": 0.057914131053878035,
-            "y": -0.5785783402167148
+            "x": 0.06573352994331438,
+            "y": -0.5493687536306655
           },
           {
-            "x": 0.05387016739037538,
-            "y": -0.6021821548603036
+            "x": 0.06179244109640637,
+            "y": -0.5742438325174557
           },
           {
-            "x": 0.049938762197272626,
-            "y": -0.6256096575427643
+            "x": 0.05784332584366723,
+            "y": -0.5990692038430516
           },
           {
-            "x": 0.04621685401012747,
-            "y": -0.6487651674203384
+            "x": 0.054025773093247596,
+            "y": -0.6233976851843047
           },
           {
-            "x": 0.042836953327839294,
-            "y": -0.6712514590211582
+            "x": 0.05036763150557556,
+            "y": -0.6474915459726439
           },
           {
-            "x": 0.03981361232105882,
-            "y": -0.6933666817309164
+            "x": 0.04689346045615292,
+            "y": -0.671522936593784
           },
           {
-            "x": 0.037180673533500644,
-            "y": -0.7153003597045694
+            "x": 0.04370047308641383,
+            "y": -0.6953318779435389
           },
           {
-            "x": 0.034999527416176186,
-            "y": -0.7370913070337102
+            "x": 0.04086029450362691,
+            "y": -0.7186935967557831
           },
           {
-            "x": 0.0333469876013414,
-            "y": -0.7584421065051579
+            "x": 0.03841745349975972,
+            "y": -0.7416064849394183
           },
           {
-            "x": 0.03227075101781174,
-            "y": -0.7791754761487129
+            "x": 0.03643183380020775,
+            "y": -0.7639313884133272
           },
           {
-            "x": 0.03179960346388141,
-            "y": -0.7993253019042782
+            "x": 0.034909146814626764,
+            "y": -0.7858558437635595
           },
           {
-            "x": 0.03226090417251242,
-            "y": -0.8283507545674728
+            "x": 0.03390744932949388,
+            "y": -0.8071757629809304
           },
           {
-            "x": 0.03408381029094844,
-            "y": -0.8550641757763859
+            "x": 0.03345067453008822,
+            "y": -0.8274663044150135
           },
           {
-            "x": 0.037166912997997285,
-            "y": -0.8795631455019373
+            "x": 0.033772150667949724,
+            "y": -0.856391288982702
           },
           {
-            "x": 0.041221151262439804,
-            "y": -0.9011477698564835
+            "x": 0.03525581329249531,
+            "y": -0.882860786794716
           },
           {
-            "x": 0.047656098127592354,
-            "y": -0.9253567952360413
+            "x": 0.03778499896310801,
+            "y": -0.9066848793636065
           },
           {
-            "x": 0.05466050459286711,
-            "y": -0.9446586125123418
+            "x": 0.04122660533233405,
+            "y": -0.9282012896634025
           },
           {
-            "x": 0.06438718897225837,
-            "y": -0.9643115332396068
+            "x": 0.04667311416202107,
+            "y": -0.9521068668757146
+          },
+          {
+            "x": 0.05395365972625222,
+            "y": -0.9745701976030513
+          },
+          {
+            "x": 0.06290476008339212,
+            "y": -0.993796172235171
+          },
+          {
+            "x": 0.04297190059581861,
+            "y": -0.987882017433542
           }
         ],
-        "trajectory_point_count": 47
+        "trajectory_point_count": 50
       }
     },
     {
@@ -398,14 +410,14 @@
       "status": "passed",
       "step_count": 5,
       "assertion_count": 5,
-      "duration_seconds": 37.78620780799997,
+      "duration_seconds": 38.39714566899997,
       "failure_reason": null,
       "steps": [
         {
           "index": 0,
           "kind": "gazebo_sim.launch",
           "status": "passed",
-          "duration_seconds": 25.001234839999995,
+          "duration_seconds": 25.001615440999984,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -413,7 +425,7 @@
           "index": 1,
           "kind": "nav2.bringup",
           "status": "passed",
-          "duration_seconds": 25.00118295300001,
+          "duration_seconds": 25.001603818999996,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -421,7 +433,7 @@
           "index": 2,
           "kind": "ros_graph.readiness",
           "status": "passed",
-          "duration_seconds": 1.2995780900000113,
+          "duration_seconds": 1.511640548999992,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -429,7 +441,7 @@
           "index": 3,
           "kind": "nav2.readiness",
           "status": "passed",
-          "duration_seconds": 0.43839184099999784,
+          "duration_seconds": 0.5822568039999965,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -437,7 +449,7 @@
           "index": 4,
           "kind": "navigation_data.readiness",
           "status": "passed",
-          "duration_seconds": 5.4711476699999935,
+          "duration_seconds": 5.817776804000005,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -445,33 +457,33 @@
           "index": 5,
           "kind": "wait_for_nav2_active",
           "status": "passed",
-          "duration_seconds": 0.2503322100000105,
+          "duration_seconds": 0.2503735330000154,
           "failure_reason": null,
-          "time_offset_seconds": 32.21044596899998
+          "time_offset_seconds": 32.913355730999996
         },
         {
           "index": 6,
           "kind": "set_initial_pose",
           "status": "passed",
-          "duration_seconds": 1.63565835899999,
+          "duration_seconds": 1.6336224090000542,
           "failure_reason": null,
-          "time_offset_seconds": 32.460794152999995
+          "time_offset_seconds": 33.163746756999984
         },
         {
           "index": 7,
           "kind": "send_goal",
           "status": "passed",
-          "duration_seconds": 0.07137533899998516,
+          "duration_seconds": 0.06175936200003207,
           "failure_reason": null,
-          "time_offset_seconds": 34.096464620000006
+          "time_offset_seconds": 34.797378243
         },
         {
           "index": 8,
           "kind": "expect_goal_reached",
           "status": "passed",
-          "duration_seconds": 3.2798649470000214,
+          "duration_seconds": 3.1894933170000286,
           "failure_reason": null,
-          "time_offset_seconds": 34.167847189999975
+          "time_offset_seconds": 34.85914539000001
         }
       ],
       "assertions": [
@@ -499,20 +511,20 @@
           "index": 2,
           "kind": "travel_time",
           "status": "passed",
-          "message": "travel_time=3.27986 is within max 30.",
+          "message": "travel_time=3.18949 is within max 30.",
           "severity": "error",
           "metric": "travel_time",
-          "actual": 3.279859829999964,
+          "actual": 3.189488798999946,
           "expected": 30.0
         },
         {
           "index": 3,
           "kind": "path_length",
           "status": "passed",
-          "message": "path_length_traveled=1.16514 is within max 3.",
+          "message": "path_length_traveled=1.1432 is within max 3.",
           "severity": "error",
           "metric": "path_length_traveled",
-          "actual": 1.1651354422192715,
+          "actual": 1.1432004301216934,
           "expected": 3.0
         },
         {
@@ -550,200 +562,196 @@
         "execute_simulator_steps": false,
         "contact_collection_requested": false,
         "ros_graph_ready": true,
-        "ros_graph_wait_seconds": 1.299578,
+        "ros_graph_wait_seconds": 1.511641,
         "ros_graph_timeout": 90.0,
         "ros_graph_commands": "ros2 node list; ros2 topic list",
         "ros_graph_error": "",
         "nav2_ready": true,
-        "nav2_wait_seconds": 0.438392,
+        "nav2_wait_seconds": 0.582257,
         "nav2_timeout": 180.0,
         "nav2_error": "",
         "navigation_data_ready": true,
-        "navigation_data_wait_seconds": 5.471148,
+        "navigation_data_wait_seconds": 5.817777,
         "navigation_data_timeout": 180.0,
         "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
         "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
         "navigation_data_error": "",
         "nav2_bringup_log": "/out/reports/straight_line/artifacts/straight_line/nav2_bringup.log",
         "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
-        "travel_time": 3.279859829999964,
-        "travel_time.ahead": 3.279859829999964,
+        "travel_time": 3.189488798999946,
+        "travel_time.ahead": 3.189488798999946,
         "goal_reached": true,
-        "path_length_traveled": 1.1651354422192715,
-        "path_length_traveled.ahead": 1.1651354422192715,
+        "path_length_traveled": 1.1432004301216934,
+        "path_length_traveled.ahead": 1.1432004301216934,
         "replanning_count": 3,
         "replanning_count.ahead": 3,
         "trajectory": [
           {
-            "x": 2.2371907111849929e-07,
-            "y": 3.322722480788554e-16
+            "x": 2.2371907111849664e-07,
+            "y": 3.3227224807884884e-16
           },
           {
-            "x": 0.02308274507858229,
-            "y": 2.214610253606662e-05
+            "x": 0.020076308114043602,
+            "y": 2.534980500248011e-05
           },
           {
-            "x": 0.044132765400190864,
-            "y": 0.00011287959636559948
+            "x": 0.047578426931954854,
+            "y": 0.00017475710365642315
           },
           {
-            "x": 0.07005226146545682,
-            "y": 0.0003546109148194423
+            "x": 0.07403689269983413,
+            "y": 0.0004701576686113386
           },
           {
-            "x": 0.10045288972801852,
-            "y": 0.0008172505441753153
+            "x": 0.09403750129738572,
+            "y": 0.0007688294889558401
           },
           {
-            "x": 0.12256544826089479,
-            "y": 0.0012704448907377805
+            "x": 0.11520964126859887,
+            "y": 0.0011401765407203757
           },
           {
-            "x": 0.14600299968879427,
-            "y": 0.001856936665072726
+            "x": 0.13802295771936682,
+            "y": 0.0015901215664975508
           },
           {
-            "x": 0.17144116413803062,
-            "y": 0.0026034532052659426
+            "x": 0.16233853864806608,
+            "y": 0.00211820397837708
           },
           {
-            "x": 0.19812681816815575,
-            "y": 0.003498647289942066
+            "x": 0.18799157631457122,
+            "y": 0.0027209436354412244
           },
           {
-            "x": 0.2258724356141271,
-            "y": 0.004544364219704895
+            "x": 0.21531927892639224,
+            "y": 0.0034189657656825225
           },
           {
-            "x": 0.2549964842413237,
-            "y": 0.005756681112657154
+            "x": 0.24344657706570333,
+            "y": 0.004200624172677828
           },
           {
-            "x": 0.28474864244847375,
-            "y": 0.007092517413517242
+            "x": 0.2730018085401922,
+            "y": 0.005084034939631021
           },
           {
-            "x": 0.315514469671374,
-            "y": 0.008461712887472677
+            "x": 0.3033778928461183,
+            "y": 0.00603834988438299
           },
           {
-            "x": 0.34698244959401564,
-            "y": 0.009729348497136595
+            "x": 0.3348486066772796,
+            "y": 0.007061388422904704
           },
           {
-            "x": 0.3791379950333133,
-            "y": 0.010841980796819176
+            "x": 0.36721906442196445,
+            "y": 0.008134890391910768
           },
           {
-            "x": 0.41190361022203953,
-            "y": 0.011757961427296983
+            "x": 0.4001884952443383,
+            "y": 0.009237316380698548
           },
           {
-            "x": 0.44499814272753474,
-            "y": 0.012443127254774387
+            "x": 0.4332880849730045,
+            "y": 0.010345818827371364
           },
           {
-            "x": 0.478115149842127,
-            "y": 0.012882261753099786
+            "x": 0.46638978453905205,
+            "y": 0.011446672221952059
           },
           {
-            "x": 0.511234578907308,
-            "y": 0.013061822081299966
+            "x": 0.49949208294698594,
+            "y": 0.012529347752225022
           },
           {
-            "x": 0.544354437381458,
-            "y": 0.012993796080384656
+            "x": 0.5325950642747396,
+            "y": 0.013590948650092824
           },
           {
-            "x": 0.577472975287096,
-            "y": 0.01269009382923938
+            "x": 0.5656987168287342,
+            "y": 0.014631398696020403
           },
           {
-            "x": 0.6105885787841946,
-            "y": 0.012154368613488127
+            "x": 0.598803302906567,
+            "y": 0.015641676662953897
           },
           {
-            "x": 0.6436999127090874,
-            "y": 0.011399271440078802
+            "x": 0.6319090365141455,
+            "y": 0.016613622275038157
           },
           {
-            "x": 0.6768058573161363,
-            "y": 0.010436145842895797
+            "x": 0.6650161338799195,
+            "y": 0.017537861211462932
           },
           {
-            "x": 0.7099058093720447,
-            "y": 0.009285057887338551
+            "x": 0.6981247981709859,
+            "y": 0.01840413553016194
           },
           {
-            "x": 0.7427903918935281,
-            "y": 0.007989320998859524
+            "x": 0.7310752988517709,
+            "y": 0.019205182353029423
           },
           {
-            "x": 0.7749972646715131,
-            "y": 0.0066285027236668405
+            "x": 0.7635827485983937,
+            "y": 0.01993736724173491
           },
           {
-            "x": 0.8063839776948859,
-            "y": 0.005378657755282819
+            "x": 0.7951292313431721,
+            "y": 0.020586249636966137
           },
           {
-            "x": 0.836385159109921,
-            "y": 0.0043548254948027314
+            "x": 0.8261216105719675,
+            "y": 0.021156442037567617
           },
           {
-            "x": 0.865380957841887,
-            "y": 0.0036319390379311064
+            "x": 0.8559358340435846,
+            "y": 0.02163501271997035
           },
           {
-            "x": 0.893693068520445,
-            "y": 0.003220322412456114
+            "x": 0.8853303512319755,
+            "y": 0.02204137823724016
           },
           {
-            "x": 0.9217452447228396,
-            "y": 0.003093614702902097
+            "x": 0.914281563816454,
+            "y": 0.022372115725792032
           },
           {
-            "x": 0.9494116974525643,
-            "y": 0.003190147335370328
+            "x": 0.942778704870178,
+            "y": 0.022631573562902685
           },
           {
-            "x": 0.9762608590898797,
-            "y": 0.0034544143726538802
+            "x": 0.9707417948553951,
+            "y": 0.022830083632855817
           },
           {
-            "x": 1.002336287274549,
-            "y": 0.003848622682814487
+            "x": 0.9973484729269224,
+            "y": 0.022968569350316114
           },
           {
-            "x": 1.027444280651089,
-            "y": 0.0043432586413820464
+            "x": 1.0234320281298814,
+            "y": 0.0230569946356142
           },
           {
-            "x": 1.0520691573067478,
-            "y": 0.004939079173220632
+            "x": 1.048503444801196,
+            "y": 0.02311014827855094
           },
           {
-            "x": 1.0760363276296403,
-            "y": 0.005620772263402706
+            "x": 1.0732246723656873,
+            "y": 0.023147152916719795
           },
           {
-            "x": 1.099486560573681,
-            "y": 0.006375414210562707
+            "x": 1.0972277384111948,
+            "y": 0.02317703863172081
           },
           {
-            "x": 1.1222010300853988,
-            "y": 0.00718417380518982
+            "x": 1.1205217086542623,
+            "y": 0.023204491875556493
           },
           {
-            "x": 1.144044016943631,
-            "y": 0.00802908125668588
-          },
-          {
-            "x": 1.1646740798663757,
-            "y": 0.008884924818756882
+            "x": 1.1428920806712561,
+            "y": 0.0232386319115054
           }
         ],
-        "trajectory_point_count": 42
+        "trajectory_point_count": 41
       }
     },
     {
@@ -758,14 +766,14 @@
       "status": "passed",
       "step_count": 5,
       "assertion_count": 5,
-      "duration_seconds": 41.19285534199997,
+      "duration_seconds": 41.19852400800005,
       "failure_reason": null,
       "steps": [
         {
           "index": 0,
           "kind": "gazebo_sim.launch",
           "status": "passed",
-          "duration_seconds": 25.001209361999997,
+          "duration_seconds": 25.00142888800002,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -773,7 +781,7 @@
           "index": 1,
           "kind": "nav2.bringup",
           "status": "passed",
-          "duration_seconds": 25.001195091,
+          "duration_seconds": 25.001415162,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -781,7 +789,7 @@
           "index": 2,
           "kind": "ros_graph.readiness",
           "status": "passed",
-          "duration_seconds": 1.3173421360000361,
+          "duration_seconds": 1.518464085000005,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -789,7 +797,7 @@
           "index": 3,
           "kind": "nav2.readiness",
           "status": "passed",
-          "duration_seconds": 0.5410560960000339,
+          "duration_seconds": 0.5788584789999618,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -797,7 +805,7 @@
           "index": 4,
           "kind": "navigation_data.readiness",
           "status": "passed",
-          "duration_seconds": 5.357350544000042,
+          "duration_seconds": 5.213639876000002,
           "failure_reason": null,
           "time_offset_seconds": null
         },
@@ -805,33 +813,33 @@
           "index": 5,
           "kind": "wait_for_nav2_active",
           "status": "passed",
-          "duration_seconds": 0.2503332620000265,
+          "duration_seconds": 0.25057937899998706,
           "failure_reason": null,
-          "time_offset_seconds": 32.217017546999955
+          "time_offset_seconds": 32.31248061500003
         },
         {
           "index": 6,
           "kind": "set_initial_pose",
           "status": "passed",
-          "duration_seconds": 1.6343191880000063,
+          "duration_seconds": 1.6395256669999867,
           "failure_reason": null,
-          "time_offset_seconds": 32.46736580199996
+          "time_offset_seconds": 32.56307407000003
         },
         {
           "index": 7,
           "kind": "send_goal",
           "status": "passed",
-          "duration_seconds": 0.06151124199999458,
+          "duration_seconds": 0.06179555400001391,
           "failure_reason": null,
-          "time_offset_seconds": 34.10169496499998
+          "time_offset_seconds": 34.202609655
         },
         {
           "index": 8,
           "kind": "expect_goal_reached",
           "status": "passed",
-          "duration_seconds": 6.690299868000011,
+          "duration_seconds": 6.589559835999978,
           "failure_reason": null,
-          "time_offset_seconds": 34.16321499999998
+          "time_offset_seconds": 34.264412472000004
         }
       ],
       "assertions": [
@@ -859,20 +867,20 @@
           "index": 2,
           "kind": "travel_time",
           "status": "passed",
-          "message": "travel_time=6.6903 is within max 60.",
+          "message": "travel_time=6.5895 is within max 60.",
           "severity": "error",
           "metric": "travel_time",
-          "actual": 6.690299568,
+          "actual": 6.5894994629999815,
           "expected": 60.0
         },
         {
           "index": 3,
           "kind": "path_length",
           "status": "passed",
-          "message": "path_length_traveled=1.33397 is within max 4.",
+          "message": "path_length_traveled=1.33502 is within max 4.",
           "severity": "error",
           "metric": "path_length_traveled",
-          "actual": 1.3339728638210793,
+          "actual": 1.3350218931330118,
           "expected": 4.0
         },
         {
@@ -910,27 +918,27 @@
         "execute_simulator_steps": false,
         "contact_collection_requested": false,
         "ros_graph_ready": true,
-        "ros_graph_wait_seconds": 1.317342,
+        "ros_graph_wait_seconds": 1.518464,
         "ros_graph_timeout": 90.0,
         "ros_graph_commands": "ros2 node list; ros2 topic list",
         "ros_graph_error": "",
         "nav2_ready": true,
-        "nav2_wait_seconds": 0.541056,
+        "nav2_wait_seconds": 0.578858,
         "nav2_timeout": 180.0,
         "nav2_error": "",
         "navigation_data_ready": true,
-        "navigation_data_wait_seconds": 5.357351,
+        "navigation_data_wait_seconds": 5.21364,
         "navigation_data_timeout": 180.0,
         "navigation_data_topics": "/tf, /map, /global_costmap/costmap, /local_costmap/costmap",
         "navigation_data_commands": "ros2 topic echo /tf --once; ros2 topic echo /map --once; ros2 topic echo /global_costmap/costmap --once; ros2 topic echo /local_costmap/costmap --once",
         "navigation_data_error": "",
         "nav2_bringup_log": "/out/reports/u_turn/artifacts/u_turn/nav2_bringup.log",
         "simulator_command": "gz sim -r -s /opt/ros/jazzy/share/nav2_minimal_tb3_sim/worlds/tb3_sandbox.sdf",
-        "travel_time": 6.690299568,
-        "travel_time.turn_around": 6.690299568,
+        "travel_time": 6.5894994629999815,
+        "travel_time.turn_around": 6.5894994629999815,
         "goal_reached": true,
-        "path_length_traveled": 1.3339728638210793,
-        "path_length_traveled.turn_around": 1.3339728638210793,
+        "path_length_traveled": 1.3350218931330118,
+        "path_length_traveled.turn_around": 1.3350218931330118,
         "replanning_count": 6,
         "replanning_count.turn_around": 6,
         "trajectory": [
@@ -939,204 +947,204 @@
             "y": 3.322722480788536e-16
           },
           {
-            "x": 0.020077026303646675,
-            "y": 2.5208911077849685e-05
+            "x": 0.02307339750922192,
+            "y": 2.083665828754674e-05
           },
           {
-            "x": 0.04772555350288354,
-            "y": 0.00013599698309605982
+            "x": 0.043981773402909694,
+            "y": 8.510821677708505e-05
           },
           {
-            "x": 0.07448319671472556,
-            "y": 0.0003839443887477741
+            "x": 0.06992667287833045,
+            "y": 0.0002593236061039845
           },
           {
-            "x": 0.09469405739125444,
-            "y": 0.0006733977844204072
+            "x": 0.10009392273436378,
+            "y": 0.0005990984293161337
           },
           {
-            "x": 0.11605000450994257,
-            "y": 0.0010609438912422236
+            "x": 0.12203208085100652,
+            "y": 0.0009139967893964041
           },
           {
-            "x": 0.13903124030062922,
-            "y": 0.0015478025160924904
+            "x": 0.1453136476476239,
+            "y": 0.001299078096216834
           },
           {
-            "x": 0.16357585536720115,
-            "y": 0.0021332014752152317
+            "x": 0.17035405205495052,
+            "y": 0.0017797088050936283
           },
           {
-            "x": 0.18940970135323879,
-            "y": 0.0028064357982235735
+            "x": 0.196646512547097,
+            "y": 0.0023717326873593245
           },
           {
-            "x": 0.21691429666336337,
-            "y": 0.0035817951961433087
+            "x": 0.22399765973757813,
+            "y": 0.0031048341885662866
           },
           {
-            "x": 0.24516872922422342,
-            "y": 0.004436505032703354
+            "x": 0.25267820348935277,
+            "y": 0.004003851971286485
           },
           {
-            "x": 0.27482539806795336,
-            "y": 0.005384783450642519
+            "x": 0.2820851807508617,
+            "y": 0.005049949953455252
           },
           {
-            "x": 0.3052718364473401,
-            "y": 0.006388796295145569
+            "x": 0.31246497250763416,
+            "y": 0.006151450160225091
           },
           {
-            "x": 0.3366374505921046,
-            "y": 0.00743963751441663
+            "x": 0.3434409785597431,
+            "y": 0.007200487855900007
           },
           {
-            "x": 0.3686990245142481,
-            "y": 0.008516443717460121
+            "x": 0.3749375089376703,
+            "y": 0.008151027104686912
           },
           {
-            "x": 0.4009537768512274,
-            "y": 0.00959279502606607
+            "x": 0.4067079501529812,
+            "y": 0.008959906692780715
           },
           {
-            "x": 0.4331387164111658,
-            "y": 0.010654210644178834
+            "x": 0.43831072896589396,
+            "y": 0.009587328792461864
           },
           {
-            "x": 0.4651697918924361,
-            "y": 0.0116880157114612
+            "x": 0.46977975009432393,
+            "y": 0.010023297938727872
           },
           {
-            "x": 0.49698229071781674,
-            "y": 0.012680525563331409
+            "x": 0.5012489017884418,
+            "y": 0.010260123823358008
           },
           {
-            "x": 0.5286864669352946,
-            "y": 0.013631823992583225
+            "x": 0.532523892851929,
+            "y": 0.010305733958139413
           },
           {
-            "x": 0.5599067572417332,
-            "y": 0.01453136913359346
+            "x": 0.5634516569121293,
+            "y": 0.010166111222162513
           },
           {
-            "x": 0.5906913839720195,
-            "y": 0.015372999102567635
+            "x": 0.594130722492425,
+            "y": 0.009846108358533895
           },
           {
-            "x": 0.6211141499676724,
-            "y": 0.016152883759288878
+            "x": 0.6244250805191917,
+            "y": 0.00935450596965567
           },
           {
-            "x": 0.6510458211438237,
-            "y": 0.016860852153171756
+            "x": 0.6544485898144435,
+            "y": 0.008693486056310705
           },
           {
-            "x": 0.6802707274614245,
-            "y": 0.01748766709980051
+            "x": 0.6837992595639141,
+            "y": 0.007889575163508326
           },
           {
-            "x": 0.7095657460472921,
-            "y": 0.018052299916796945
+            "x": 0.7125885603131193,
+            "y": 0.00696543883282072
           },
           {
-            "x": 0.738686869665996,
-            "y": 0.018560452261502318
+            "x": 0.741046390482754,
+            "y": 0.005937866369065309
           },
           {
-            "x": 0.7671864888125426,
-            "y": 0.01902176893194915
+            "x": 0.769010229306378,
+            "y": 0.004820354578620921
           },
           {
-            "x": 0.7951827127772421,
-            "y": 0.019456934276269634
+            "x": 0.7962154678122209,
+            "y": 0.003593967299957296
           },
           {
-            "x": 0.8224673919885797,
-            "y": 0.019895616055037257
+            "x": 0.8228635025910335,
+            "y": 0.002199220147819911
           },
           {
-            "x": 0.8488976193766125,
-            "y": 0.02037192829406349
+            "x": 0.8487186207954062,
+            "y": 0.0005905652869838932
           },
           {
-            "x": 0.8746020933588635,
-            "y": 0.020952118238712923
+            "x": 0.8741613629177591,
+            "y": -0.0012994916799659024
           },
           {
-            "x": 0.8995487720531831,
-            "y": 0.02168801407887474
+            "x": 0.8990372841130873,
+            "y": -0.0035184418803285594
           },
           {
-            "x": 0.9237430671645368,
-            "y": 0.022648485005873194
+            "x": 0.9227990428255985,
+            "y": -0.006038805531782717
           },
           {
-            "x": 0.9464005828705093,
-            "y": 0.023848923915798532
+            "x": 0.9456834390207377,
+            "y": -0.008921328231326544
           },
           {
-            "x": 0.9686367634606816,
-            "y": 0.0253847071762151
+            "x": 0.9675013402649086,
+            "y": -0.012159443508753757
           },
           {
-            "x": 0.9900283148950465,
-            "y": 0.02726787908373154
+            "x": 0.9885993175611566,
+            "y": -0.01582724443908082
           },
           {
-            "x": 1.0110980465870385,
-            "y": 0.029599376733280315
+            "x": 1.0087950340281528,
+            "y": -0.01990736129796487
           },
           {
-            "x": 1.0316512554302217,
-            "y": 0.032390854332159214
+            "x": 1.028304117762511,
+            "y": -0.024468116128664723
           },
           {
-            "x": 1.0515284063722952,
-            "y": 0.03564042843248794
+            "x": 1.0554288558933949,
+            "y": -0.031999938448359466
           },
           {
-            "x": 1.0796920891404445,
-            "y": 0.041357215792136824
+            "x": 1.0797177459175544,
+            "y": -0.0401953886593965
           },
           {
-            "x": 1.1049585935071171,
-            "y": 0.04783736304836491
+            "x": 1.1007236189620877,
+            "y": -0.04871274567551878
           },
           {
-            "x": 1.1267241895877367,
-            "y": 0.05475507752206758
+            "x": 1.1238629243075378,
+            "y": -0.06021441105324485
           },
           {
-            "x": 1.1457147594395576,
-            "y": 0.062108920466022906
+            "x": 1.1418411382401392,
+            "y": -0.0714404717499916
           },
           {
-            "x": 1.1668647583541552,
-            "y": 0.07233336470961652
+            "x": 1.1591270683162536,
+            "y": -0.08560933173551181
           },
           {
-            "x": 1.1869396082422612,
-            "y": 0.08499316035080431
+            "x": 1.1627829424640344,
+            "y": -0.0629120695021332
           },
           {
-            "x": 1.203731365749124,
-            "y": 0.09988108737016103
+            "x": 1.1666863666650165,
+            "y": -0.04086835698139125
           },
           {
-            "x": 1.2148126439800477,
-            "y": 0.08307163019097781
+            "x": 1.1748891429958914,
+            "y": -0.019683023500781695
           },
           {
-            "x": 1.226571769903826,
-            "y": 0.06399339038754864
+            "x": 1.1858257736952507,
+            "y": -0.0021849093268342295
           },
           {
-            "x": 1.2419170252499008,
-            "y": 0.04920581026905423
+            "x": 1.2006594582422432,
+            "y": 0.013370756237539923
           },
           {
-            "x": 1.260417890102983,
-            "y": 0.03852788962571407
+            "x": 1.2178364027739932,
+            "y": 0.024133398173458612
           }
         ],
         "trajectory_point_count": 51
